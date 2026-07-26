@@ -2,14 +2,14 @@
 name: sentinel-help
 description: >-
   Displays a comprehensive help menu and command catalog for the Sentinel Agent Memory Bank.
-  Prints descriptions of all 18 commands, classifying them into Auto-Triggerable and Explicit-Only (Deterrent) categories.
+  Prints descriptions of all 19 commands, classifying them into Auto-Triggerable and Explicit-Only (Deterrent) categories.
   Use when asked for help, to list available commands, explain how a skill works, or show framework documentation.
 ---
 
 # `sentinel-help` Skill
 
 ## Overview
-This skill acts as a Framework Navigator and Command Reference. It prints a detailed catalog explaining the purpose, safety level, required inputs, and output files of all 18 commands in the Sentinel Agent Memory Bank.
+This skill acts as a Framework Navigator and Command Reference. It prints a detailed catalog explaining the purpose, safety level, required inputs, and output files of all 19 commands in the Sentinel Agent Memory Bank.
 
 ## Execution Steps
 
@@ -41,6 +41,7 @@ This skill acts as a Framework Navigator and Command Reference. It prints a deta
 | `/sentinel-drift` | Auto-Triggerable | Detects discrepancies and drift between the established project architecture and the actual implementation, writing the report to `.memory-bank/audits/drift-<hash>.md`. |
 | `/sentinel-converge` | Auto-Triggerable | Compares the implemented codebase against the approved plan, appending missing tasks to the task pipeline. |
 | `/sentinel-qa` | Auto-Triggerable | Autonomously designs and writes negative Red Team unit and integration tests under `tests/` based on `.specs/boundary-conditions.md`. |
+| `/sentinel-testpilot` | Auto-Triggerable | Autonomous functional QA agent (TestSprite-style): detects the native test framework, plans and writes runnable tests, executes them, classifies real product bugs vs test defects, self-heals (max 3 iterations), and writes `.memory-bank/audits/testreport-<hash>.md`. |
 | `/sentinel-preflight` | Auto-Triggerable | Audits deployment environment variables, configurations, and secrets before release, creating a persistent `.specs/preflight-checklist.md`. |
 | `/sentinel-brief` | Auto-Triggerable | Generates a single-page context onboarding summary (State of the Union) at `.memory-bank/state-of-the-union.md`. |
 | `/sentinel-doctor` | Auto-Triggerable | Runs a deterministic integrity check on memory bank folders, active locks, logs, and schemas, writing the report to `.memory-bank/audits/doctor-<hash>.md`. |

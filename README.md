@@ -120,6 +120,7 @@ Once installed, you can trigger specific workflows using the following commands:
 | **`/sentinel-drift`** | Detects discrepancies between the established architecture and the actual implementation (e.g. rogue packages, orphaned files). |
 | **`/sentinel-converge`** | Compares the implemented codebase against the implementation plan to autonomously append missing or unfinished tasks. |
 | **`/sentinel-qa`** | Autonomously writes Red Team unit and integration tests designed to aggressively break the boundary conditions and security rules. |
+| **`/sentinel-testpilot`** | Autonomous functional QA agent (TestSprite-style): detects the project's own test framework, generates a test plan, writes runnable tests, executes them, classifies real bugs vs test defects, self-heals, and writes a report. |
 | **`/sentinel-preflight`** | Audits the deployment environment, external dependencies, CI/CD pipelines, and secrets before allowing a commit or release. |
 | **`/sentinel-rescue`** | Hard-resets the project and memory bank back to the last known coherent state in case of severe hallucinations or corruption. |
 | **`/sentinel-brief`** | Generates a single-page onboarding summary (State of the Union) for humans or agents migrating between environments. |
