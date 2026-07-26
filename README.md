@@ -79,13 +79,13 @@ Read more about how these phases run in [docs/workflow.md](file:///docs/workflow
 
 ### 🟢 Zero Setup — Let Your Agent Install It (For Beginners)
 
-You don't need to understand what a \"skill folder\" or a \"terminal\" is. Just copy the text below for your AI agent and paste it into a new chat. The agent will handle the entire setup.
+You don't need to understand what a "skill folder" or a "terminal" is. Just copy the text below for your AI agent and paste it into a new chat. The agent will handle the entire setup.
 
 **For Claude Code:**
-> Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/sentinel-agent-skill.git ~/sentinel-agent-skill && chmod +x ~/sentinel-agent-skill/install.sh && ~/sentinel-agent-skill/install.sh` then tell me what slash commands are now available.
+> Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/project-sentinel.git ~/project-sentinel && chmod +x ~/project-sentinel/install.sh && ~/project-sentinel/install.sh` then tell me what slash commands are now available.
 
 **For Google Antigravity (Windows):**
-> Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/sentinel-agent-skill.git "$env:USERPROFILE\.gemini\config\plugins\sentinel-agent-skill"` then tell me what slash commands are now available.
+> Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/project-sentinel.git "$env:USERPROFILE\.gemini\config\plugins\project-sentinel"` then tell me what slash commands are now available.
 
 **For Cursor or Windsurf:**
 > Since Cursor and Windsurf do not currently support native skill execution, open the `templates/sentinel-directive.md` file from this repo, copy all of its text, and paste it into your IDE's global rules (e.g., Settings → Rules for AI). Then simply type `/sentinel` in a new chat to begin.
@@ -96,11 +96,11 @@ You don't need to understand what a \"skill folder\" or a \"terminal\" is. Just 
 
 For power users who prefer to install the skills manually:
 
-- **For Google Antigravity (Windows):** Clone directly to `%USERPROFILE%\.gemini\config\plugins\sentinel-agent-skill\`.
+- **For Google Antigravity (Windows):** Clone directly to `%USERPROFILE%\.gemini\config\plugins\project-sentinel\`.
 - **For Claude Code:** Clone the repository anywhere, then run the installer script:
   - macOS/Linux: `./install.sh`
   - Windows: `.\install.ps1`
-  This will link individual skills under `skills/*` into `~/.claude/skills/` so they are recognized natively.
+  - This will link individual skills under `skills/*` into `~/.claude/skills/` so they are recognized natively.
 
 ---
 
@@ -146,12 +146,12 @@ Since Sentinel is installed via Git, updates are fast and easy.
 
 **Zero Setup Method (For Beginners):**
 Just tell your agent to update the repository for you:
-> "Update my sentinel skills by running `git pull` inside the `sentinel-agent-skill` directory."
+> "Update my sentinel skills by running `git pull` inside the `project-sentinel` directory."
 
 **Manual Method (For Power Users):**
 Navigate to your agent's config folder where you installed Sentinel and pull the latest changes:
 ```bash
-cd <path-to-skill-folder>/sentinel-agent-skill
+cd <path-to-skill-folder>/project-sentinel
 git pull origin main
 ```
 

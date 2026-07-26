@@ -1,6 +1,6 @@
 # Sentinel Agent Skill - Project Directives
 
-This document contains project-scoped rules for AI agents working on the `sentinel-agent-skill` repository itself.
+This document contains project-scoped rules for AI agents working on the `project-sentinel` repository itself.
 
 ## 1. Meta-Memory Constraint
 Do NOT generate a full `.memory-bank/` directory for this specific project. Since this repository is the *generator* of the Memory Bank framework, adding a full memory bank here creates confusing recursion. All agent memory and project rules for this repo are kept exclusively within this `.agents/AGENTS.md` file.
@@ -92,6 +92,20 @@ A feature is ONLY complete when its full 5-link End-to-End Wiring Chain is verif
 5. **UI Feedback / State Update** (Toast message, Modal response, Screen state change)
 
 If ANY link in this chain is missing (e.g. backend route exists but frontend client never calls it, or client method exists but no UI button triggers it), the feature MUST be classified as `🔴 UNCONNECTED (Missing UI Trigger or Service Link)` and MUST NOT be reported as completed.
+
+## 18. Premature Code Mutation Prevention (Intent Verification Guard — Anti-Eager Trigger)
+An agent MUST NEVER edit files, run build/deploy commands, or mutate codebase state based on casual conversation, user brainstorming, or statements of future/personal intent (e.g., "I will change the domain later", "Thinking about switching to PostgreSQL", "I'm going to rename app.example.com").
+
+**Mandatory Action-Trigger Boundaries:**
+1. **Explicit Present-Tense Command Required:** An agent MAY ONLY invoke code modification tools (`replace_file_content`, `write_to_file`) or build/test commands when the user gives an explicit, present-tense instruction to execute (e.g., "Update main.ts now", "Change the domain in config", "Refactor table.ts").
+2. **Intent & Brainstorming Pause:** When the user shares an architectural idea, a future plan, or a contextual observation, the agent MUST:
+   - Discuss or confirm the idea in natural language.
+   - Outline the affected files or strategy if helpful.
+   - **DO NOT TOUCH ANY SOURCE FILES OR RUN BUILD COMMANDS.**
+   - Ask for confirmation: "Would you like me to proceed with updating these files now?"
+3. **Zero Unsolicited File Edits:** Eagerly jumping to view, edit, or build files before the user asks for action is a severe protocol failure. If in doubt, ask before touching code.
+
+
 
 
 
