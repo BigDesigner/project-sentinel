@@ -41,7 +41,7 @@ Detect, from repository files only, the project paradigm, package manager, nativ
 - **Package manager:** infer from the lockfile (`pnpm-lock.yaml`→pnpm, `yarn.lock`→yarn, `package-lock.json`→npm). Never switch a project's package manager.
 - **Existing config:** locate and reuse `jest.config.*`, `vitest.config.*`, `playwright.config.*`, `conftest.py`, `pytest.ini`, `phpunit.xml`, etc. Do not create a parallel configuration.
 - **E2E capability probe:** check whether a browser automation tool is available in the host IDE, or whether Playwright/Cypress is installed. Record the result for Step 5.
-- **No framework present:** do NOT silently install one. Present an **itemized** dependency request — the exact package names and the exact install command (e.g., `pnpm --prefix backend add -D vitest miniflare`) — as a SEPARATE, explicit approval, never folded into the general plan approval. Wait for a distinct "yes" to the install before adding any dependency.
+- **No framework present:** do NOT silently install one. Present an **itemized** dependency request — the exact package names and the exact install command for the detected ecosystem (e.g., `npm install -D vitest` for Node, `pip install pytest` for Python) — as a SEPARATE, explicit approval, never folded into the general plan approval. Wait for a distinct "yes" to the install before adding any dependency.
 
 ### Step 2. Baseline Run (Do No Harm)
 - If the project already has tests, run the existing suite FIRST and record the baseline (which tests currently pass/fail). This protects against two failure modes: breaking currently-green tests, and duplicating existing coverage.
