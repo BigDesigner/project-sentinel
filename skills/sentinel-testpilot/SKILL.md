@@ -74,10 +74,16 @@ Only when integration or E2E tests require a running app:
 - Prepare an isolated test datastore (a dedicated test DB or in-memory/SQLite where the stack supports it). Run migrations and load minimal seed/fixtures. Never run tests against production or development data.
 - Start the app non-blocking (background) and **wait for readiness by polling a health endpoint or the port** — never a fixed `sleep`. Record the process handle.
 - **Ecosystem-Specific Bring-Up Patterns:**
-  - **WordPress Plugins:** Use WP-Playground CLI (`npx @wp-playground/cli server --mount=.:/wordpress/wp-content/plugins/<slug>`) or WP-CLI (`wp eval-file` with `wp-load.php` bootstrapped). Never run raw `php script.php` without WordPress core context for integration tests.
-  - **Node/Express/Next.js:** Start test server on dynamic port (`PORT=0`) or use `supertest`/`msw`.
-  - **Python/FastAPI/Django:** Use `TestClient(app)` or `pytest-django` in-memory DB.
-  - **Cloudflare Workers:** Use `miniflare` or `wrangler dev --local`.
+  - **1. JS/TS (Node, Express, Next.js, React, Vue, NestJS):** Start non-blocking test server on dynamic port (`PORT=0`), use `supertest(app)`, `msw` for network mocks, or Playwright/Cypress for E2E web.
+  - **2. Python (FastAPI, Django, Flask):** Use `httpx.AsyncClient(app)` / `TestClient(app)` for FastAPI/Flask, or `pytest-django` with in-memory SQLite (`:memory:`) for Django.
+  - **3. Go (Gin, Echo, Fiber, gRPC):** Use `httptest.NewServer(router)` or `net/http/httptest` for HTTP handlers, and in-memory SQLite/dockertest for DB.
+  - **4. Rust (Actix-web, Axum, Rocket):** Use `actix_web::test::init_service(app)` or `axum::test` with tokio test runner and SQLite in-memory DB.
+  - **5. PHP & WordPress (Laravel, Symfony, WP):** For WP Plugins, use WP-Playground CLI (`npx @wp-playground/cli server --mount=.:/wordpress/wp-content/plugins/<slug>`) or WP-CLI (`wp eval-file` with `wp-load.php`). For Laravel/Symfony, use `php artisan test` or `./vendor/bin/phpunit` with SQLite in-memory DB.
+  - **6. Java/Kotlin (Spring Boot, Quarkus, Micronaut):** Use `@SpringBootTest(webEnvironment = RANDOM_PORT)` with Testcontainers or H2 in-memory DB.
+  - **7. .NET (ASP.NET Core, Blazor):** Use `WebApplicationFactory<TEntryPoint>` with Microsoft.AspNetCore.Mvc.Testing and In-Memory EF Core Provider / Testcontainers.NET.
+  - **8. Dart/Flutter (Web, Mobile, Desktop):** Use `flutter test` for widgets/unit, and `flutter test integration_test/` or `dart test` for integration.
+  - **9. Ruby (Rails, Sinatra):** Use `rails test` / `rspec` with `Rack::Test` or Capybara for system tests.
+  - **10. Cloudflare Workers & Serverless:** Use `miniflare` or `wrangler dev --local` for local Worker + D1 / KV / R2 emulation.
 - Define teardown up front (stop the server, drop/reset the test DB) and guarantee it runs in Step 10 even if tests fail.
 
 ### Step 6. Test Authoring (Native Conventions, Deterministic)
