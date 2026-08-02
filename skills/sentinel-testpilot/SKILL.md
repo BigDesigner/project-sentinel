@@ -79,7 +79,7 @@ Only when integration or E2E tests require a running app:
   - **2. Python (FastAPI, Django, Flask):** Use `httpx.AsyncClient(app)` / `TestClient(app)` for FastAPI/Flask, or `pytest-django` with in-memory SQLite (`:memory:`) for Django.
   - **3. Go (Gin, Echo, Fiber, gRPC):** Use `httptest.NewServer(router)` or `net/http/httptest` for HTTP handlers, and in-memory SQLite/dockertest for DB.
   - **4. Rust (Actix-web, Axum, Rocket):** Use `actix_web::test::init_service(app)` or `axum::test` with tokio test runner and SQLite in-memory DB.
-  - **5. PHP & WordPress (Laravel, Symfony, WP):** For WP Plugins, use WP-Playground CLI (`npx @wp-playground/cli server --mount=.:/wordpress/wp-content/plugins/<slug>`) or WP-CLI (`wp eval-file` with `wp-load.php`). For Laravel/Symfony, use `php artisan test` or `./vendor/bin/phpunit` with SQLite in-memory DB.
+  - **5. PHP & WordPress (Laravel, Symfony, WP Themes/Plugins):** For WP Plugins/Themes, use WP-Playground CLI (`npx @wp-playground/cli@latest server --php=8.2 --wp=6.8 --mount=./:<wp-path> --login`) or WP-CLI (`wp eval-file` with `wp-load.php`). For Laravel/Symfony, use `php artisan test` or `./vendor/bin/phpunit` with SQLite in-memory DB.
   - **6. Java/Kotlin (Spring Boot, Quarkus, Micronaut):** Use `@SpringBootTest(webEnvironment = RANDOM_PORT)` with Testcontainers or H2 in-memory DB.
   - **7. .NET (ASP.NET Core, Blazor):** Use `WebApplicationFactory<TEntryPoint>` with Microsoft.AspNetCore.Mvc.Testing and In-Memory EF Core Provider / Testcontainers.NET.
   - **8. Dart/Flutter (Web, Mobile, Desktop):** Use `flutter test` for widgets/unit, and `flutter test integration_test/` or `dart test` for integration.
