@@ -33,6 +33,7 @@ Detect, from repository files only, the project paradigm, package manager, nativ
 | Go (`go.mod`) | built-in testing | `go test ./...` | `-cover` |
 | Rust (`Cargo.toml`) | built-in `#[test]` | `cargo test` | `cargo llvm-cov` |
 | PHP (`composer.json`) | PHPUnit, Pest | `./vendor/bin/phpunit` | `--coverage-text` |
+| WordPress Plugin/Theme (`*.php`, `style.css`) | WP-CLI, WP-Playground CLI, WP-Browser | `wp eval-file ...` / `npx @wp-playground/cli` / `phpunit` | `--coverage-text` |
 | Java/Kotlin (`build.gradle`, `pom.xml`) | JUnit, Kotest | `./gradlew test` / `mvn test` | JaCoCo |
 | .NET (`.csproj`, `.sln`) | xUnit, NUnit, MSTest | `dotnet test` | `--collect:"XPlat Code Coverage"` |
 | Dart/Flutter (`pubspec.yaml`) | `flutter_test`, `test` | `flutter test` / `dart test` | `--coverage` |
@@ -40,6 +41,7 @@ Detect, from repository files only, the project paradigm, package manager, nativ
 
 - **Package manager:** infer from the lockfile (`pnpm-lock.yaml`→pnpm, `yarn.lock`→yarn, `package-lock.json`→npm). Never switch a project's package manager.
 - **Existing config:** locate and reuse `jest.config.*`, `vitest.config.*`, `playwright.config.*`, `conftest.py`, `pytest.ini`, `phpunit.xml`, etc. Do not create a parallel configuration.
+- **CMS / Framework Execution Distinction (CRITICAL — Anti-Illusion Guard):** Running a raw CLI script (e.g. `php test-script.php`) outside of the framework's core runtime (WordPress, Laravel, Symfony, Rails) proves ONLY PHP syntax loading (`Class Syntax Load`). It does NOT load framework hooks, REST API routes, shortcodes, DB tables, or external drivers. A raw class load script MUST NEVER be presented as a WordPress Integration, REST API, or Storage Driver test. True integration testing requires booting the real framework via `wp-cli`, `npx @wp-playground/cli`, Docker, or framework test suite. If framework boot fails or is unavailable, report the execution honestly as `Syntax/Load Only` and list the framework integration as `untested`.
 - **E2E capability probe:** check whether a browser automation tool is available in the host IDE, or whether Playwright/Cypress is installed. Record the result for Step 5.
 - **No framework present:** do NOT silently install one. Present an **itemized** dependency request — the exact package names and the exact install command for the detected ecosystem (e.g., `npm install -D vitest` for Node, `pip install pytest` for Python) — as a SEPARATE, explicit approval, never folded into the general plan approval. Wait for a distinct "yes" to the install before adding any dependency.
 
@@ -133,6 +135,7 @@ For every failing test, determine the root cause and classify it into exactly on
 7. Never auto-commit or push. Write files and the report, then hand the user a proposed commit message and an exact file list; never `git add .` (Core Principle 8, No Automatic Commits).
 8. Never assert only one layer of an operation that has multiple observable effects — assert the response, the persisted state, and the side-effects together, or declare the untested layers.
 9. Coverage numbers in the report must come from a real coverage run, or be explicitly marked `unmeasured` with a reason.
+10. Never disguise a raw CLI script execution (e.g., running standalone `php test-script.php` outside of WordPress/Laravel/framework core context) as a framework integration, REST API, shortcode, or external driver test. If full framework execution (e.g., WP-CLI, WP-Playground CLI, Docker, DB) fails or is skipped, report the test execution honestly as `Class Syntax Load Only` and explicitly mark framework integration as `untested`.
 
 ## Report Structure
 Present the report using this outline (render tables directly as native Markdown in chat; do NOT wrap them in a code block):
