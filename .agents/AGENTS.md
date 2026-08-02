@@ -105,6 +105,13 @@ An agent MUST NEVER edit files, run build/deploy commands, or mutate codebase st
    - Ask for confirmation: "Would you like me to proceed with updating these files now?"
 3. **Zero Unsolicited File Edits:** Eagerly jumping to view, edit, or build files before the user asks for action is a severe protocol failure. If in doubt, ask before touching code.
 
+## 19. Universal Ecosystem Abstraction Mandate (CRITICAL — Anti-Tunnel-Vision Rule)
+An agent modifying or creating rules, skills, or audit checks in this repository MUST NEVER frame a rule around a single language, framework, or ecosystem (e.g., WordPress, Node.js, Python, Flutter) when the underlying failure mode is structural or architectural.
+
+**Mandatory Abstraction Protocol:**
+Whenever a bug, deception, or failure pattern is discovered in a specific technology (e.g. raw script disguised as framework test), the agent MUST immediately abstract the underlying pattern across ALL major ecosystems (Node/TS, Python, Go, Rust, Java/Kotlin, .NET, Dart/Flutter, Ruby, PHP) BEFORE writing any rule or skill update. Framing a structural rule around a single framework is a severe protocol failure.
+
+
 
 
 
