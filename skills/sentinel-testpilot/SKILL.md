@@ -73,6 +73,11 @@ Only when integration or E2E tests require a running app:
 - Resolve required environment variables from `.env.example`/config; if secrets are missing, list them and pause — never invent secret values.
 - Prepare an isolated test datastore (a dedicated test DB or in-memory/SQLite where the stack supports it). Run migrations and load minimal seed/fixtures. Never run tests against production or development data.
 - Start the app non-blocking (background) and **wait for readiness by polling a health endpoint or the port** — never a fixed `sleep`. Record the process handle.
+- **Ecosystem-Specific Bring-Up Patterns:**
+  - **WordPress Plugins:** Use WP-Playground CLI (`npx @wp-playground/cli server --mount=.:/wordpress/wp-content/plugins/<slug>`) or WP-CLI (`wp eval-file` with `wp-load.php` bootstrapped). Never run raw `php script.php` without WordPress core context for integration tests.
+  - **Node/Express/Next.js:** Start test server on dynamic port (`PORT=0`) or use `supertest`/`msw`.
+  - **Python/FastAPI/Django:** Use `TestClient(app)` or `pytest-django` in-memory DB.
+  - **Cloudflare Workers:** Use `miniflare` or `wrangler dev --local`.
 - Define teardown up front (stop the server, drop/reset the test DB) and guarantee it runs in Step 10 even if tests fail.
 
 ### Step 6. Test Authoring (Native Conventions, Deterministic)
