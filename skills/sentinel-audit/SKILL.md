@@ -33,7 +33,7 @@ This skill performs a lightweight security audit based on the rules defined in `
   8. **Business Logic Flaws:** Obvious concurrency race condition patterns, state verification gaps.
   9. **Hardcoded Secrets & PII:** Inlined API keys, private tokens, passwords, database credentials, or unredacted personal details.
   10. **Outdated/Vulnerable Dependencies:** Deprecated or insecure packages referenced in manifests.
-  11. **API Hook & Event Signature Mismatches (Rule 20):** Incorrect parameter format assumptions or string format mismatches in framework hooks, filter callbacks, or event handlers (e.g. WP `plugins_api` `$args->slug` vs `plugin_basename()`, Express `req.params`).
+  11. **API Hook & Event Signature Mismatches (Rule 20):** Incorrect parameter format assumptions or string format mismatches in framework hooks, filter callbacks, or event handlers (e.g. Express `req.params`, FastAPI `Path(...)`, WordPress hook arguments).
   12. **Async Timer Race Conditions (Rule 21):** Missing `clearTimeout` or missing cancellation token handling on async delays (`setTimeout`, `setInterval`, `Promise.race`) during rapid re-invocations.
   13. **Asymmetric Dead Signals & Half-Wired Attributes (Rule 22):** Backend template attributes or API payload keys emitted but never read or consumed by any frontend client or event listener.
   14. **Metadata Drift & Hardcoded Single Source Violations (Rule 23):** Hardcoded version strings or metadata duplicated across multiple separate source files instead of reading dynamically from a canonical source (`VERSION`, `package.json`).
