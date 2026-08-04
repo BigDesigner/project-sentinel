@@ -111,6 +111,19 @@ An agent modifying or creating rules, skills, or audit checks in this repository
 **Mandatory Abstraction Protocol:**
 Whenever a bug, deception, or failure pattern is discovered in a specific technology (e.g. raw script disguised as framework test), the agent MUST immediately abstract the underlying pattern across ALL major ecosystems (Node/TS, Python, Go, Rust, Java/Kotlin, .NET, Dart/Flutter, Ruby, PHP) BEFORE writing any rule or skill update. Framing a structural rule around a single framework is a severe protocol failure.
 
+## 20. Mandatory API Contract & Hook Argument Verification Rule (CRITICAL — Anti-Assumption Rule)
+An agent modifying or writing integration code across any ecosystem (Node, Python, Go, Rust, Java, .NET, PHP, Flutter, Ruby) MUST NEVER guess or assume the string format, key structure, or parameter type of framework hooks, event payloads, or middleware callbacks (e.g. WP `plugins_api` `$args->slug` vs `plugin_basename()`, Express `req.params` vs `req.path`, FastAPI dependency injections). The agent MUST verify the authoritative framework contract specification before writing conditional checks or equality logic.
+
+## 21. Async State & Race Condition Safety Mandate (CRITICAL — Anti-Flake Rule)
+Any code introducing asynchronous delays, timers, debounces, or state transitions (`setTimeout`, `setInterval`, `Promise.race`, `RxJS`, `tokio::time`, `co_await`) MUST implement deterministic cleanup (e.g., `clearTimeout`, cancellation tokens, active timer resetting) to prevent stale timer execution from corrupting active UI, DOM, or database state during rapid re-invocations.
+
+## 22. Asymmetric Data Attribute & Dead Signal Rule (CRITICAL — Rule 17 Extension)
+If a backend handler, template engine, or API response emits a data attribute, metadata key, or payload field (e.g. `data-lightbox-gallery`, JSON response field `gallery_id`), but no frontend client, JS event listener, or subscriber reads or consumes that key, the feature MUST be classified as `🔴 ASYMMETRIC / UNCONNECTED SIGNAL` and CANNOT be marked as complete.
+
+## 23. Single Source of Truth Metadata Mandate
+Project metadata (version strings, build numbers, API base URLs, package slugs) MUST be read dynamically from a single canonical source of truth (e.g. `VERSION` file, `package.json`, `Cargo.toml`, plugin header). Hardcoding the exact same metadata string across multiple separate source files is strictly prohibited to prevent version drift.
+
+
 
 
 
