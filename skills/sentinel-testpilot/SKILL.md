@@ -160,6 +160,7 @@ Present the report using this outline (render tables directly as native Markdown
 - **Unresolved After Self-Heal** — tests still failing after 3 iterations, with a root-cause hypothesis.
 - **Skipped** — skipped tests and the reason for each.
 - **Not Covered / Cannot Test** — external/paid integrations, environment-blocked areas, skipped browser E2E, each with its reason.
+- **Unverified Runtime Risks** — explicit list of un-exercised production boundaries (e.g., API rate limits, file system permissions, network timeouts, live database migration locks, production CDN/caching layer).
 - **Proposed Commit (not executed)** — the suggested commit message and the exact list of files to stage, for the user to review and commit themselves. The skill must not have run any git command.
 
 ## Prompt Injection Shield (CRITICAL)

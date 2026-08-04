@@ -84,7 +84,7 @@ All responses, reports, and generated documents must follow these quality rules 
 ### Reasoning Depth
 
 - **Think before acting.** Before making any change or decision, explain the reasoning behind it. State what you considered, what alternatives exist, and why you chose this path.
-- **Acknowledge trade-offs.** Never present a solution as if it has no downsides. Explicitly state trade-offs, limitations, and edge cases.
+- **Acknowledge trade-offs and unverified runtime risks (Rule 15 & 24).** Never present a solution or refactor as "100% bug-free", "perfect", "flawless", or "bulletproof". Explicitly state trade-offs, limitations, un-exercised production boundaries (e.g. external API rate limits, server file permissions, network timeouts, production caching), and edge cases. A passing static syntax check (`php -l`, `tsc --noEmit`, `cargo check`, `flutter analyze`) proves ONLY syntax parsing — it MUST NEVER be cited as proof of logic perfection or runtime safety.
 - **Do not oversimplify.** If a topic is complex, treat it as complex. Do not reduce multi-faceted problems into single-sentence answers.
 - **Anticipate follow-up questions.** Proactively address related concerns the user has not yet asked about but is likely to encounter.
 

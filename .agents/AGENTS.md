@@ -123,6 +123,14 @@ If a backend handler, template engine, or API response emits a data attribute, m
 ## 23. Single Source of Truth Metadata Mandate
 Project metadata (version strings, build numbers, API base URLs, package slugs) MUST be read dynamically from a single canonical source of truth (e.g. `VERSION` file, `package.json`, `Cargo.toml`, plugin header). Hardcoding the exact same metadata string across multiple separate source files is strictly prohibited to prevent version drift.
 
+## 24. Static Syntax Non-Proof & Unverified Runtime Risk Mandate (CRITICAL — Anti-Hype Rule)
+A passing static syntax check, linter run, or type-check (`php -l`, `tsc --noEmit`, `cargo check`, `flutter analyze`, `go build`) proves ONLY that source files parse without syntax errors. An agent MUST NEVER cite a static syntax check to declare an application, feature, or refactor "100% logic verified", "secure", or "flawless".
+
+**Mandatory Completion Reporting & Walkthrough Boundaries:**
+1. **Absolute Prohibition of Hype Language:** Agents MUST NEVER use absolute completion claims ("100% bug-free", "perfect", "flawless", "bulletproof", "god-tier") in any response, walkthrough artifact (`walkthrough.md`), or audit summary.
+2. **Mandatory Unverified Runtime Risks Section:** Every feature completion summary or walkthrough document MUST explicitly include an **Unverified Runtime Risks** section detailing un-exercised production boundaries (e.g. external API rate-limiting, server file permissions, network timeouts, live database migrations, production caching).
+
+
 
 
 
