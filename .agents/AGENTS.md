@@ -118,7 +118,7 @@ An agent modifying or writing integration code across any ecosystem (Node, Pytho
 Any code introducing asynchronous delays, timers, debounces, or state transitions (`setTimeout`, `setInterval`, `Promise.race`, `RxJS`, `tokio::time`, `co_await`) MUST implement deterministic cleanup (e.g., `clearTimeout`, cancellation tokens, active timer resetting) to prevent stale timer execution from corrupting active UI, DOM, or database state during rapid re-invocations.
 
 ## 22. Asymmetric Data Attribute & Dead Signal Rule (CRITICAL — Rule 17 Extension)
-If a backend handler, template engine, or API response emits a data attribute, metadata key, or payload field (e.g. `data-lightbox-gallery`, JSON response field `gallery_id`), but no frontend client, JS event listener, or subscriber reads or consumes that key, the feature MUST be classified as `🔴 ASYMMETRIC / UNCONNECTED SIGNAL` and CANNOT be marked as complete.
+If a backend handler, template engine, or API response emits a data attribute, metadata key, or payload field (e.g. `data-gallery-id`, JSON response field `gallery_id`), but no frontend client, JS event listener, or subscriber reads or consumes that key, the feature MUST be classified as `🔴 ASYMMETRIC / UNCONNECTED SIGNAL` and CANNOT be marked as complete.
 
 ## 23. Single Source of Truth Metadata Mandate
 Project metadata (version strings, build numbers, API base URLs, package slugs) MUST be read dynamically from a single canonical source of truth (e.g. `VERSION` file, `package.json`, `Cargo.toml`, plugin header). Hardcoding the exact same metadata string across multiple separate source files is strictly prohibited to prevent version drift.
