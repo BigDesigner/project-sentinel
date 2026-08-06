@@ -123,12 +123,24 @@ If a backend handler, template engine, or API response emits a data attribute, m
 ## 23. Single Source of Truth Metadata Mandate
 Project metadata (version strings, build numbers, API base URLs, package slugs) MUST be read dynamically from a single canonical source of truth (e.g. `VERSION` file, `package.json`, `Cargo.toml`, plugin header). Hardcoding the exact same metadata string across multiple separate source files is strictly prohibited to prevent version drift.
 
-## 24. Static Syntax Non-Proof & Unverified Runtime Risk Mandate (CRITICAL — Anti-Hype Rule)
-A passing static syntax check, linter run, or type-check (`php -l`, `tsc --noEmit`, `cargo check`, `flutter analyze`, `go build`) proves ONLY that source files parse without syntax errors. An agent MUST NEVER cite a static syntax check to declare an application, feature, or refactor "100% logic verified", "secure", or "flawless".
+## 25. Integration Test Real Schema Mandate (CRITICAL — Anti-Inline Schema Rule)
+Integration and database tests across all ecosystems MUST run against actual production schema migration files (`0001_initial.sql`, Prisma/D1/Django/EF migrations), not ad-hoc inline `CREATE TABLE` strings written inside test files. Inline test schemas create false-positive test passes while hiding production foreign-key constraints, triggers, and index failures. Furthermore, API/SDK mocks MUST accurately mirror production return types and parameter behavior (e.g. metadata flags, error boundaries).
 
-**Mandatory Completion Reporting & Walkthrough Boundaries:**
-1. **Absolute Prohibition of Hype Language:** Agents MUST NEVER use absolute completion claims ("100% bug-free", "perfect", "flawless", "bulletproof", "god-tier") in any response, walkthrough artifact (`walkthrough.md`), or audit summary.
-2. **Mandatory Unverified Runtime Risks Section:** Every feature completion summary or walkthrough document MUST explicitly include an **Unverified Runtime Risks** section detailing un-exercised production boundaries (e.g. external API rate-limiting, server file permissions, network timeouts, live database migrations, production caching).
+## 26. Unprotected Route & Middleware Coverage Mandate (CRITICAL — Anti-Leak Rule)
+Every exposed API route or endpoint handler MUST be explicitly covered by the application's global authentication, authorization, tenant isolation, and rate-limiting middleware pipeline. Any route defined without middleware coverage MUST be flagged as `🔴 UNPROTECTED ROUTE / MISSING MIDDLEWARE`.
+
+## 27. Cross-Stack Type & Payload Contract Verification (CRITICAL — Rule 17 Extension)
+Agents MUST verify that backend API payload validation schemas (Zod, Pydantic, Serde, DTOs) match the exact payload types emitted by frontend API clients (e.g., string vs object/map, int vs string). Payload type mismatches that cause silent 400 Bad Request errors or client crashes MUST be flagged as `🔴 PAYLOAD TYPE MISMATCH`.
+
+## 28. CRUD Key Identity Consistency Rule (CRITICAL — Anti-Zombie Data Rule)
+Key generation templates used when writing resources (e.g., vector chunks, cache keys, database IDs, storage paths) MUST use a single canonical key generator function or constant. Generating keys with hardcoded string concatenation in one handler and deleting them with a mismatched pattern in another MUST be flagged as `🔴 CRUD KEY MISMATCH / ZOMBIE DATA RISK`.
+
+## 29. LLM System Prompt Injection & Template Safety Mandate (CRITICAL — Anti-Prompt Hijack Rule)
+User-supplied inputs, database content, or dynamic user corrections MUST NEVER be raw-concatenated into LLM System Prompts or instruction layers. System prompts MUST use structured prompt templates and strict input sanitization to prevent permanent prompt injection or unauthorized system instruction modification.
+
+## 30. Environment Config & Production Safeguard Audit Mandate (CRITICAL — Preflight Safeguard)
+Deployment configuration manifests (`wrangler.toml`, `docker-compose.yml`, `helm`, `.env.production`) MUST be audited to ensure development flags (e.g., `ENVIRONMENT = "development"`), `localhost` CORS origins, debug endpoints, or mock API keys are NEVER left enabled in production configurations.
+
 
 
 

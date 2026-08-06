@@ -37,6 +37,12 @@ This skill performs a lightweight security audit based on the rules defined in `
   12. **Async Timer Race Conditions (Rule 21):** Missing `clearTimeout` or missing cancellation token handling on async delays (`setTimeout`, `setInterval`, `Promise.race`) during rapid re-invocations.
   13. **Asymmetric Dead Signals & Half-Wired Attributes (Rule 22):** Backend template attributes or API payload keys emitted but never read or consumed by any frontend client or event listener.
   14. **Metadata Drift & Hardcoded Single Source Violations (Rule 23):** Hardcoded version strings or metadata duplicated across multiple separate source files instead of reading dynamically from a canonical source (`VERSION`, `package.json`).
+  15. **Inline Test Schema Mismatches (Rule 25):** Test suites running against ad-hoc inline `CREATE TABLE` strings instead of actual production migration files (`0001_initial.sql`, Prisma/D1 migrations), or mocks with incorrect parameter flags (`returnMetadata`).
+  16. **Unprotected API Routes & Missing Middleware (Rule 26):** Exposed API endpoints or route handlers missing global authentication, authorization, or tenant isolation middleware wrapping.
+  17. **Cross-Stack Payload Type Mismatches (Rule 27):** Backend validation schemas (Zod, Pydantic, DTOs) expecting payload types (e.g. string) that conflict with frontend API client payloads (e.g. object/map).
+  18. **CRUD Key Generator Inconsistencies & Zombie Data Risks (Rule 28):** Inconsistent ID generation patterns between resource creation and deletion handlers leading to un-deletable zombie records.
+  19. **Unsanitized LLM System Prompt Injections (Rule 29):** Raw user input, DB values, or corrections interpolated into LLM System Prompts without sanitization or prompt templates.
+
 
 ### 3. Save and Output Report
 - Automatically create a markdown file inside the `.memory-bank/audits/` directory named `audit-<short-commit-hash>.md` (use fallback `audit-<YYYY-MM-DD>.md` if git history is unavailable) and save the complete report there.

@@ -23,6 +23,7 @@ This skill acts as a "Release Engineer". Agents often write code perfectly but f
 ### 2. Dependency & Secret Audit
 - Scan CI/CD configuration files (e.g., `.github/workflows/*.yml`).
 - Scan environment configuration files (e.g., `.env.example`, `config.yaml`).
+- Scan deployment manifests (`wrangler.toml`, `docker-compose.yml`, `helm`, `.env.production`) for un-promoted development flags (e.g. `ENVIRONMENT = "development"`), `localhost` CORS origins, debug endpoints, or mock API keys (Rule 30).
 - Extract all external dependencies, tokens, and secrets referenced in the code (e.g., `secrets.WINGET_TOKEN`, `process.env.DB_PASSWORD`).
 - Evaluate Native bindings (e.g., CGO requirements, Flutter FFI DLLs).
 
