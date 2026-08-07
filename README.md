@@ -81,8 +81,11 @@ Read more about how these phases run in [docs/workflow.md](file:///docs/workflow
 
 You don't need to understand what a "skill folder" or a "terminal" is. Just copy the text below for your AI agent and paste it into a new chat. The agent will handle the entire setup.
 
-**For Claude Code:**
+**For Claude Code (macOS / Linux):**
 > Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/project-sentinel.git ~/project-sentinel && chmod +x ~/project-sentinel/install.sh && ~/project-sentinel/install.sh` then tell me what slash commands are now available.
+
+**For Claude Code (Windows):**
+> Install sentinel skills: run `git clone https://github.com/BigDesigner/project-sentinel.git "$env:USERPROFILE\project-sentinel"` and then `& "$env:USERPROFILE\project-sentinel\install.ps1"` then tell me what slash commands are now available.
 
 **For Google Antigravity (Windows):**
 > Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/project-sentinel.git "$env:USERPROFILE\.gemini\config\plugins\project-sentinel"` then tell me what slash commands are now available.
@@ -97,10 +100,13 @@ You don't need to understand what a "skill folder" or a "terminal" is. Just copy
 For power users who prefer to install the skills manually:
 
 - **For Google Antigravity (Windows):** Clone directly to `%USERPROFILE%\.gemini\config\plugins\project-sentinel\`.
-- **For Claude Code:** Clone the repository anywhere, then run the installer script:
+- **For Claude Code:** Clone the repository anywhere, then run the installer script once:
   - macOS/Linux: `./install.sh`
-  - Windows: `.\install.ps1`
-  - This will link individual skills under `skills/*` into `~/.claude/skills/` so they are recognized natively.
+  - Windows (PowerShell): `.\install.ps1`
+  - The installer links each skill under `skills/*` into `~/.claude/skills/`, so Claude Code loads them natively in **every** project.
+
+> [!TIP]
+> **Updating is just `git pull`.** The installer creates links (symlinks on macOS/Linux, directory junctions on Windows — no administrator rights required), not copies. Running `git pull` inside your cloned repository updates every installed skill immediately; you only need to re-run the installer when a brand-new skill is added, or if your system forced a copy-mode fallback (the installer tells you which mode it used).
 
 ---
 
@@ -150,11 +156,13 @@ Just tell your agent to update the repository for you:
 > "Update my sentinel skills by running `git pull` inside the `project-sentinel` directory."
 
 **Manual Method (For Power Users):**
-Navigate to your agent's config folder where you installed Sentinel and pull the latest changes:
+Navigate to the folder where you cloned Sentinel and pull the latest changes:
 ```bash
-cd <path-to-skill-folder>/project-sentinel
+cd <path-to-your-clone>/project-sentinel
 git pull origin main
 ```
+
+For Claude Code this is all you need: the installed skills are links back into this clone, so the pull updates them immediately. Re-run `install.sh` / `install.ps1` only when a new skill directory has been added upstream (a pull cannot create a link that does not exist yet), or if the installer reported that it fell back to copy mode.
 
 ---
 
