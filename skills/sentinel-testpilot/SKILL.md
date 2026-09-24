@@ -109,7 +109,7 @@ For every failing test, determine the root cause and classify it into exactly on
 
 ### Step 9. Bounded Self-Heal Loop (max 3 iterations)
 - For **test defects only**, fix the test and re-run, at most **3 total iterations** to avoid infinite loops and token waste.
-- **Assertion-integrity rule (CRITICAL — anti-cheating):** you may fix setup, wiring, selectors, or an expected value that genuinely contradicts the documented spec. You may NEVER weaken, delete, or `skip` an assertion merely to make a failing test green — that converts a real bug into a false pass. If the correct expected behavior is genuinely ambiguous, stop and ask the user instead of guessing.
+- **Assertion-integrity rule (CRITICAL — Anti-Softening Guard / AGENTS.md Rule 31):** you may fix setup, wiring, selectors, or an expected value that genuinely contradicts the documented spec. You are STRICTLY PROHIBITED from weakening, deleting, commenting out, or skipping (`@skip`, `it.skip`, `#[ignore]`, pytest `-k "not test"`) an assertion merely to make a failing test green — that converts a real bug into a false pass. The implementation must be fixed to satisfy the test contract, never the test softened. If the correct expected behavior is genuinely ambiguous, stop and ask the user instead of guessing.
 - If a test still fails after 3 iterations, stop and report it as unresolved with your best root-cause hypothesis. Any skipped test must be reported as skipped with its reason.
 
 ### Step 10. Teardown & Report

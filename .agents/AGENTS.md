@@ -123,6 +123,9 @@ If a backend handler, template engine, or API response emits a data attribute, m
 ## 23. Single Source of Truth Metadata Mandate
 Project metadata (version strings, build numbers, API base URLs, package slugs) MUST be read dynamically from a single canonical source of truth (e.g. `VERSION` file, `package.json`, `Cargo.toml`, plugin header). Hardcoding the exact same metadata string across multiple separate source files is strictly prohibited to prevent version drift.
 
+## 24. Static Syntax Non-Proof & Unverified Runtime Risk Mandate (CRITICAL — Anti-Hype Rule)
+A passing static syntax check or linter run (`php -l`, `tsc --noEmit`, `cargo check`, `flutter analyze`, `go build`) proves ONLY that files parse without syntax errors. An agent MUST NEVER cite a syntax check to claim code is "100% logic verified" or "flawless". All completion reports and `walkthrough.md` documents MUST explicitly list **Unverified Runtime Risks** (e.g. external API rate limits, file permissions, network timeouts, live DB migrations) and MUST NEVER use hype/perfection claims ("100% bug-free", "flawless", "bulletproof").
+
 ## 25. Integration Test Real Schema Mandate (CRITICAL — Anti-Inline Schema Rule)
 Integration and database tests across all ecosystems MUST run against actual production schema migration files (`0001_initial.sql`, Prisma/D1/Django/EF migrations), not ad-hoc inline `CREATE TABLE` strings written inside test files. Inline test schemas create false-positive test passes while hiding production foreign-key constraints, triggers, and index failures. Furthermore, API/SDK mocks MUST accurately mirror production return types and parameter behavior (e.g. metadata flags, error boundaries).
 
@@ -140,6 +143,25 @@ User-supplied inputs, database content, or dynamic user corrections MUST NEVER b
 
 ## 30. Environment Config & Production Safeguard Audit Mandate (CRITICAL — Preflight Safeguard)
 Deployment configuration manifests (`wrangler.toml`, `docker-compose.yml`, `helm`, `.env.production`) MUST be audited to ensure development flags (e.g., `ENVIRONMENT = "development"`), `localhost` CORS origins, debug endpoints, or mock API keys are NEVER left enabled in production configurations.
+
+## 31. Test Mutation & Assertion Invariant (CRITICAL — Anti-Softening Guard)
+When investigating bugs, regressions, or failing verification gates across all ecosystems (Node/TS, Python, Go, Rust, Java, .NET, PHP, Dart/Flutter, Ruby), an agent is STRICTLY PROHIBITED from weakening, deleting, commenting out, or skipping (`@skip`, `it.skip`, `#[ignore]`, pytest `-k "not test"`) existing test assertions solely to achieve a green test pass.
+- **Core Seam Invariant:** The source implementation MUST be corrected to satisfy the test contract, NEVER the test softened to satisfy a defective implementation.
+- **Authorized Updates Only:** Modifying or deleting existing test assertions is permitted ONLY when the user explicitly authorizes an intentional public API contract or schema change. The agent must document the reason in the task log before touching the test file. Adding new tests, negative cases, and regression assertions is always permitted and encouraged.
+
+## 32. Chronic Defect Escalation & Self-Evolving Constitution (The 3-Strike Invariant)
+When recording defects or recurring issues in `.memory-bank/bugs/` or session task logs:
+- If any architectural defect pattern, security boundary breach, or regression recurs **3 times** across a project or sessions, the agent MUST NOT simply fix it a third time.
+- The agent MUST proactively synthesize the underlying preventative rule and propose elevating it into a permanent invariant within `.specs/constitution.md` or `.specs/boundary-conditions.md`.
+- Once confirmed by the user, the newly graduated invariant becomes a binding architectural constraint for all future sessions.
+
+## 33. Context Saturation & Trajectory Circuit Breakers (Anti-Oscillation Guard)
+- **Oscillation Breaker:** If an agent engages in 3 consecutive iterations that oscillate between contradictory states (e.g. edit A -> revert to B -> edit back to A) or repeat the identical error trace without progress, it MUST immediately halt the tool loop. It must explicitly state the oscillation pattern and present 2–3 concrete trade-off options for the user to decide.
+- **Saturation Advisory:** When a task trajectory exceeds approximately 25 conversational turns or cumulative tool outputs degrade context coherence, the agent MUST proactively advise freezing active state via `/sentinel-handoff` and restarting with a fresh session to preserve 100% reasoning fidelity.
+
+## 34. Cryptographic Governance Integrity & Baseline Verification (CRITICAL — FIM Baseline Guard)
+Core governance artifacts (`.specs/`, `.memory-bank/`, `.agents/`) must have their cryptographic baseline (SHA-256 hashes or file state) tracked and verified by `/sentinel-doctor` and `/sentinel-mb`. Any silent truncation, accidental deletion, or unauthorized mutation of governance specifications outside of explicit user commands MUST be flagged as `🔴 GOVERNANCE INTEGRITY VIOLATION / MUTATION DETECTED`.
+
 
 
 

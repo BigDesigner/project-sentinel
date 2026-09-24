@@ -36,10 +36,21 @@ This skill acts as a Memory Bank Linter and self-check mechanism. Prompts alone 
 - List the files under `.archive/docs-migration/`.
 - Cross-reference each archived file against `.memory-bank/migration-map.md`. Any archived file with no migration-map record is a **Violation**.
 
-### 6. Report and Guided Repair
+### 6. Cryptographic Baseline & Governance Integrity Check (FIM)
+- Check `.memory-bank/active-session.json` for `governance_baseline_hashes`.
+- If present, calculate the SHA-256 hashes of `.specs/boundary-conditions.md`, `.specs/constitution.md`, and `.agents/AGENTS.md`.
+- Compare each against the recorded baseline. If any file has been modified without an explicit user session directive, or truncated unexpectedly, report as **Violation: Governance Baseline Mutation Detected**.
+- If `governance_baseline_hashes` is not yet recorded, report as **Warning: Cryptographic Baseline Unset** (recommend running `/sentinel-mb` to baseline).
+
+### 7. Chronic Defect Pattern Analysis (The 3-Strike Invariant)
+- Parse `.memory-bank/bugs/bug-list.md` and historical session task entries.
+- Group recorded bugs and regressions by category and root cause.
+- If any defect pattern or architectural failure has occurred **3 or more times**, flag as **Warning: Chronic Defect Escalation Required**. Propose a draft invariant rule to elevate into `.specs/constitution.md` to prevent recurrence permanently.
+
+### 8. Report and Guided Repair
 - Compile a `Memory Bank Health Report` grading each check: **Critical**, **Violation**, **Warning**, or **OK**.
 - Save a copy of the report to `.memory-bank/audits/doctor-<short-commit-hash>.md` (use fallback `doctor-<YYYY-MM-DD>.md` if git history is unavailable), in English, matching the audit-report naming convention.
-- Present the report to the user in the chat, followed by a concrete repair checklist (e.g., "delete stale lock", "run log rotation on verified-worklog.md").
+- Present the report to the user in the chat, followed by a concrete repair checklist (e.g., "delete stale lock", "run log rotation on verified-worklog.md", "re-baseline governance hashes").
 - **Rule:** This skill is report-first. It must NOT modify, rotate, or delete anything without explicit user approval of the repair checklist.
 - **Reporting Language:** Check `.memory-bank/active-session.json` to verify `preferred_language`. All interactive explanations, chat responses, and the health report shown to the user MUST be written in the user's preferred language (e.g., Spanish, French, German, Turkish, etc.), while the saved audit file remains in English.
 - **Visual Output Template:** Ensure the generated report strictly follows this Markdown structure. When presenting the health report in the chat response, do NOT wrap the tables or markdown content inside a code block (like ` ```markdown `). Instead, render them directly in the chat message as native Markdown so the chat UI can display them as beautiful, properly formatted tables:
@@ -54,6 +65,8 @@ This skill acts as a Memory Bank Linter and self-check mechanism. Prompts alone 
 | Lock State | [OK / Violation / Critical] | ... |
 | Log Rotation Limits | [OK / Violation / Critical] | ... |
 | Archive Consistency | [OK / Violation / Critical] | ... |
+| Governance Integrity (FIM) | [OK / Violation / Warning] | ... |
+| Chronic Defect Escalation | [OK / Warning] | ... |
 
 ## Detailed Findings & Guided Repair Checklist
 - [ ] **Critical:** ... (Repair steps)

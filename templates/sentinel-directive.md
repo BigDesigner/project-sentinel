@@ -64,6 +64,19 @@ This directive is designed for any repository, regardless of programming languag
 13. **Context Window Protection (Log Rotation).**
     Before reading or appending to `.memory-bank/changelog/verified-worklog.md`, `.tasks/pipeline.md`, or `.memory-bank/bugs/bug-list.md`, check the file size or line count. If any of these files exceed 300 lines, you must perform an immediate log rotation. Move the oldest 200 lines to a new file in `.archive/docs-migration/<YYYY-MM-DD>/` and leave only the most recent, active entries in the primary file. Summarize the archived items in a single sentence at the top of the active file.
 
+14. **Test Assertion Immutability & Anti-Softening Guard.**
+    When executing verification or repairing bugs, never weaken, delete, comment out, or skip existing test assertions solely to achieve a green test pass. The source implementation must be fixed to satisfy the contract, not the test softened to accommodate a broken implementation. Altering existing test assertions requires explicit user consent.
+
+15. **Chronic Defect Escalation & Self-Evolving Constitution (The 3-Strike Invariant).**
+    If any defect pattern, security violation, or regression recurs 3 times within a codebase or across sessions, the agent must proactively synthesize a preventative rule and propose elevating it into a permanent invariant in `.specs/constitution.md` or `.specs/boundary-conditions.md`.
+
+16. **Context Saturation & Trajectory Circuit Breakers.**
+    If an agent encounters 3 oscillating fix attempts that flip between contradictory states without resolution, it must halt immediately and present concrete trade-off options. When conversational trajectories exceed ~25 turns, advise freezing progress into `.tasks/handoff.md` and initiating a fresh session.
+
+17. **Cryptographic Governance Integrity (FIM Baseline).**
+    Core governance and memory bank specifications must maintain a cryptographic baseline tracked in `active-session.json`. Any silent truncation or unauthorized mutation outside of confirmed user instructions must be flagged as an integrity breach.
+
+
 ---
 
 ## AI Environment Detection
@@ -704,6 +717,11 @@ Create or update the session state.
     "bugs": ".memory-bank/bugs/",
     "tasks": ".tasks/",
     "archive": ".archive/docs-migration/"
+  },
+  "governance_baseline_hashes": {
+    "constitution": null,
+    "boundary_conditions": null,
+    "agents_rules": null
   }
 }
 ```

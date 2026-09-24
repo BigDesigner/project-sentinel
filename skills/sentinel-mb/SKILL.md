@@ -49,10 +49,16 @@ This skill focuses solely on creating or updating the memory bank structural ele
           "bugs": ".memory-bank/bugs/",
           "tasks": ".tasks/",
           "archive": ".archive/docs-migration/"
+        },
+        "governance_baseline_hashes": {
+          "constitution": null,
+          "boundary_conditions": null,
+          "agents_rules": null
         }
       }
       ```
-   - If it does exist, read it, update the `timestamp` to the current ISO-8601 time, write to `active-session.tmp.json`, and perform an atomic rename/move to `active-session.json`.
+   - **Cryptographic Baseline (FIM):** If `.specs/constitution.md`, `.specs/boundary-conditions.md`, or `.agents/AGENTS.md` exist on disk, compute their SHA-256 digests and store them in `governance_baseline_hashes`. If creating an empty state, leave them as `null` until those files are populated.
+   - If it does exist, read it, update the `timestamp` to the current ISO-8601 time, refresh the `governance_baseline_hashes` for any modified governance files, write to `active-session.tmp.json`, and perform an atomic rename/move to `active-session.json`.
    - Delete `.memory-bank/.session.lock`.
 
 4. **Completion Report & Language Verification**
