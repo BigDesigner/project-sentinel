@@ -47,7 +47,7 @@ Any skill that can destroy state, delete files, or mutate session records (curre
 Every skill's frontmatter description MUST follow the trigger-rich formula (400-700 characters in English using folded YAML scalar `>-` format) documenting: (1) what it does, (2) what project files it reads/requires, (3) what outputs it writes, and (4) a set of "Use when..." natural language trigger phrases. Destructive or state-mutating skills (`rescue`, `prune`, `handoff`, `coauth`) MUST use a deterrent tone and explicitly state: "Only run when the user explicitly invokes the command. Do not auto-trigger." in their description to prevent auto-invocation across all IDE platforms.
 
 ## 13. Pre-Execution Initialization Guard (CRITICAL)
-Before executing any Sentinel command or skill (except for `/sentinel`, `/sentinel-mb`, `/sentinel-help`, `/sentinel-grill`, and `/sentinel-grillme`), you MUST verify that the Memory Bank has been bootstrapped by checking if `.memory-bank/active-session.json` or `.specs/` folders exist on disk. If they are missing:
+Before executing any Sentinel command or skill (except for `/sentinel`, `/sentinel-mb`, `/sentinel-help`, `/sentinel-grill`, `/sentinel-grillme`, and `/sentinel-docgen`), you MUST verify that the Memory Bank has been bootstrapped by checking if `.memory-bank/active-session.json` or `.specs/` folders exist on disk. If they are missing:
 1. HALT execution immediately.
 2. Explain to the user in their preferred language that the command cannot run because the Memory Bank is not initialized.
 3. Guide the user to run `/sentinel` (for a full setup), `/sentinel-mb` (for state-only setup), or `/sentinel-grill` (for interactive architecture boot) to initialize the workspace.
@@ -202,6 +202,15 @@ Any endpoint, webhook handler, admin screen, or background routine that initiate
 Dynamic user interface elements in client-side scripts (JavaScript, TypeScript, jQuery, Web Components, vanilla DOM) MUST NEVER be constructed via raw string concatenation interpolated into HTML sinks (`.html('<img src="' + url + '">')`, `innerHTML`, `insertAdjacentHTML`, `outerHTML`):
 1. **Native Node Creation:** Elements, tags, and attributes MUST be created declaratively using native DOM manipulation APIs (`document.createElement()`, `element.setAttribute()`, `element.textContent`), library-level builders (e.g., jQuery `$('<tag>', { attr: ... })`), JSX/TSX virtual DOM nodes, or template clones (`<template>` / `cloneNode(true)`).
 2. **Attribute & Protocol Sanitization:** Dynamic attribute values (especially `href`, `src`, `action`, `formaction`) must be strictly validated against safe URL schemes (`http:`, `https:`, `mailto:`, relative paths) before assignment to prevent `javascript:` pseudoprotocol injection and DOM-based Cross-Site Scripting (DOM XSS).
+
+## 40. Evidence-Based Documentation Scaffolding & Zero-Hallucination Standard (CRITICAL — Anti-Fluff Standard)
+When generating or scaffolding technical documentation across any software ecosystem (via `/sentinel-docgen` or any agent workflow):
+1. **100% Evidence Citation:** Every architectural assertion, route signature, database column, and configuration key cited in documentation MUST be linked directly to its source file and line numbers (`<!-- Verified from: path/to/file#L1-L20 -->`). Never state an architectural assumption without verified code evidence.
+2. **Structured Human-Input Slots:** Context that cannot be proven from code (such as historical business drivers, client constraints, domain rules, or design decisions) MUST NEVER be fabricated or hallucinated. Instead, it MUST be cleanly isolated as a structured `<!-- [HUMAN-INPUT-REQUIRED] -->` slot for human authors to complete.
+3. **Strict App Code Immutability:** Documentation generators MUST operate in strict READ-ONLY mode on all application source code, manifests, and configs outside `.documentation/`. Under no circumstances may documentation workflows alter, reformat, or delete application source files.
+4. **Rich Semantic Markdown (Accordions & Tables):** Exhaustive schemas, payload samples, and deep-dive notes MUST be wrapped in `<details><summary><b>...</b></summary>...</details>` blocks to preserve readability. All parameters, columns, and configs MUST use Markdown tables.
+5. **Zero Decorative Emojis:** Strictly prohibited. Never use decorative emojis (🚀, ✨, 🎉, 💡, 🔥, etc.). Only semantic alert blocks (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`) and minimal severity tags (`[CRITICAL]`, `[HIGH]`, `[OK]`, `[WARNING]`, `[MISSING]`, `⚠️`, `🔴`, `🟢`) are permitted.
+
 
 
 
