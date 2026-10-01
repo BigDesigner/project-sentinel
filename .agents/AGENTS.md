@@ -210,6 +210,7 @@ When generating or scaffolding technical documentation across any software ecosy
 3. **Strict App Code Immutability:** Documentation generators MUST operate in strict READ-ONLY mode on all application source code, manifests, and configs outside `.documentation/`. Under no circumstances may documentation workflows alter, reformat, or delete application source files.
 4. **Rich Semantic Markdown (Accordions & Tables):** Exhaustive schemas, payload samples, and deep-dive notes MUST be wrapped in `<details><summary><b>...</b></summary>...</details>` blocks to preserve readability. All parameters, columns, and configs MUST use Markdown tables.
 5. **Zero Decorative Emojis:** Strictly prohibited. Never use decorative emojis (🚀, ✨, 🎉, 💡, 🔥, etc.). Only semantic alert blocks (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`) and minimal severity tags (`[CRITICAL]`, `[HIGH]`, `[OK]`, `[WARNING]`, `[MISSING]`, `⚠️`, `🔴`, `🟢`) are permitted.
+6. **Interactive Documentation Language Selection Gate:** While the codebase, manifests, and technical symbols remain strictly in English (per Rule 8), documentation generated inside `.documentation/` is user/developer-facing. The agent MUST interactively ask the user which language they prefer for the documentation suite (with English as the recommended default standard) before generating any files, ensuring the prose and explanatory narratives match the project team's language preference.
 
 
 

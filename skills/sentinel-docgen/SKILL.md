@@ -1,7 +1,7 @@
 ---
 name: sentinel-docgen
 description: >-
-  Scans the codebase via static inspection across 18 ecosystems (.NET, Node, Python, Go, Rust, Java, PHP, Flutter, Ruby, C/C++, Swift, Elixir, Solidity, Zig, Nim, Haskell, Scala, Julia) to scaffold an evidence-backed documentation suite under .documentation/ without modifying application code. Reads manifests, schemas, routes, and configs. Writes 6 modular markdown documents: system-architecture.md, readme.md, shortcomings.md, developer-notes.md, api-reference.md, and data-dictionary.md with details accordions and tables. Injects structured human-input slots with zero decorative emojis. Use when asked to generate documentation, document architecture, or build API reference.
+  Scans the codebase via static inspection across 18 ecosystems (.NET, Node, Python, Go, Rust, Java, PHP, Flutter, Ruby, C/C++, Swift, Elixir, Solidity, Zig, Nim, Haskell, Scala, Julia) to scaffold an evidence-backed documentation suite under .documentation/ without modifying application code. Reads manifests, schemas, routes, and configs. Prompts the user to choose documentation language (default English). Writes 6 modular markdown documents with details accordions, tables, and structured human-input slots with zero decorative emojis. Use when asked to generate documentation, document architecture, or build API reference.
 ---
 
 # `sentinel-docgen` Skill
@@ -16,6 +16,7 @@ Traditional AI documentation generators hallucinate historical rationale, fabric
 3. **Strict App Code Immutability:** This skill is strictly READ-ONLY on all application source code, manifests, and configs outside `.documentation/`. It will NEVER modify, reformat, or delete application code.
 4. **Rich Semantic Markdown (Accordions & Tables):** Exhaustive schemas, payload samples, and deep-dive notes are wrapped in `<details><summary><b>...</b></summary>...</details>` blocks to preserve readability. All parameters, columns, and configs use Markdown tables.
 5. **Zero Decorative Emojis:** Strictly prohibited. No emojis (🚀, ✨, 🎉, 💡, 🔥, etc.). Only semantic alert blocks (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`) and severity tags (`[CRITICAL]`, `[HIGH]`, `[OK]`, `[WARNING]`, `[MISSING]`, `⚠️`, `🔴`, `🟢`) are permitted.
+6. **Interactive Documentation Language Selection:** While repository core files, schemas, and code symbols remain strictly in English, all narrative descriptions, architecture summaries, and developer guidance inside `.documentation/*.md` MUST be written in the user's requested language. The agent MUST ask the user for their preferred documentation language (with English as the default standard) before generating any files.
 
 ---
 
@@ -59,12 +60,25 @@ The skill executes stack-specific static analysis according to this universal ma
 | **R & Julia** | `DESCRIPTION`, `NAMESPACE` (R), `Project.toml`, `Manifest.toml` (Julia) | `R/`, `app.R` (Shiny), `src/*.jl` | Plumber API (`#* @get /path`), Oxygen.jl / Genie.jl routes | Arrow files, Parquet, SQLite DBI, DuckDB, JuliaDB | `.Renviron`, `.Rprofile`, `startup.jl` |
 | **Lua** | `*.rockspec` (Luarocks), `game.project` (Defold), `love.conf` (LOVE2D) | `main.lua`, `init.lua` | OpenResty `location` Lua blocks, LOVE event callbacks, Neovim commands, Redis EVAL scripts | Lua tables, SQLite3 Lua bindings, Redis data structures | `config.lua`, `settings.lua`, environment tables |
 
-
 ---
 
 ## Execution Protocol
 
-### Step 1: Static Codebase Reconnaissance (Read-Only)
+### Step 1: Documentation Language Selection Gate (CRITICAL FIRST STEP)
+Before creating or writing any files into `.documentation/`, the agent MUST interactively ask the user which language they prefer for the documentation suite:
+- **Default Baseline:** English (`en`) is the recommended default for global open-source and cross-team standard.
+- **User Prompting:** Prompt the user with clear language options (e.g. using `ask_question` in IDEs supporting it, or direct chat confirmation):
+  - Option 1: `(Recommended) English (Global Standard)`
+  - Option 2: `Turkish (Turkce)`
+  - Option 3: `Spanish (Espanol)`
+  - Option 4: `German (Deutsch)`
+  - Option 5: `French (Francais)`
+  - Option 6: `Custom Language (write-in)`
+- **Scope of Selection:**
+  - All narrative explanations, section introductions, architectural summaries, and shortcomings descriptions inside `.documentation/*.md` MUST be authored in the confirmed language.
+  - Source code symbols (function names, class names, file paths, CLI flags, SQL queries, JSON keys) MUST remain in their exact, un-translated code representation.
+
+### Step 2: Static Codebase Reconnaissance (Read-Only)
 Analyze the workspace without mutating any files:
 1. **Manifests & Dependencies:** Interrogate package manifests across the Universal Ecosystem Reconnaissance Matrix. Identify pinned dependencies, engines, scripts, and runtime targets.
 2. **Directory & Topology:** Map physical folder layouts, identifying entry points across all detected language stacks, routing directories, models, controllers, and services.
@@ -74,10 +88,10 @@ Analyze the workspace without mutating any files:
 6. **Code Debt & Markers:** Grep `TODO`, `FIXME`, `HACK`, `XXX`, `BUG`, `DEPRECATED` comments across the entire repository.
 7. **Existing Specs & ADRs:** If `.specs/` or `.memory-bank/` exist, cross-reference their architectural decisions and boundary conditions into the documentation.
 
-### Step 2: Target Directory Initialization
+### Step 3: Target Directory Initialization
 Ensure the directory `.documentation/` exists at the root. If files already exist in `.documentation/`, preserve existing human inputs inside `<!-- [HUMAN-INPUT-REQUIRED] -->` blocks during updates.
 
-### Step 3: Scaffold `.documentation/readme.md`
+### Step 4: Scaffold `.documentation/readme.md`
 Generate the primary entry point:
 - **Project Identity:** Official project name, detected stack badges (plain text or semantic indicators), architecture category (API, SPA, WordPress plugin, CLI, Library).
 - **Executive Summary:** Verified facts about what the software does, followed by:
@@ -93,7 +107,7 @@ Generate the primary entry point:
 - **Available CLI / npm / Composer Scripts:** Table of runnable commands (`build`, `test`, `lint`, `dev`) extracted from manifests.
 - **Environment Configuration:** Table of environment variables (Variable Name, Required/Optional, Default, Description, Example Value).
 
-### Step 4: Scaffold `.documentation/system-architecture.md`
+### Step 5: Scaffold `.documentation/system-architecture.md`
 Generate deep architectural documentation:
 - **Structural Directory Topology:** Tree listing of key directories with functional descriptions.
 - **Component Architecture Diagram:** Mermaid flowchart (`flowchart TD`) mapping request ingress, middleware pipelines, business logic controllers/services, data persistence, and external egress.
@@ -118,7 +132,7 @@ Generate deep architectural documentation:
   > Document any major architectural pivots, discarded alternatives, or legacy constraints that influenced this topology.
   ```
 
-### Step 5: Scaffold `.documentation/api-reference.md`
+### Step 6: Scaffold `.documentation/api-reference.md`
 Generate the complete interface catalog:
 - **Authentication & Authorization Guardrails:** Token schemes, session cookies, capability checks, rate-limiting rules.
 - **Route & Command Inventory:** Comprehensive table of all endpoints or CLI commands:
@@ -142,7 +156,7 @@ Generate the complete interface catalog:
     </details>
     ````
 
-### Step 6: Scaffold `.documentation/data-dictionary.md`
+### Step 7: Scaffold `.documentation/data-dictionary.md`
 Generate persistence and entity documentation:
 - **Entity Relationship Overview:** Valid Mermaid ER diagram (`erDiagram`) depicting tables/entities and relational cardinality.
 - **Table / Model Specifications:** For each table or ORM entity:
@@ -153,7 +167,7 @@ Generate persistence and entity documentation:
 - **Caching & Transient Dictionary:** Key naming templates, storage driver (Redis, Memcached, database transients), TTLs, and cache invalidation hooks.
 - **Physical Storage Assets:** Directory paths or cloud bucket paths for uploaded assets, temp files, or exports.
 
-### Step 7: Scaffold `.documentation/shortcomings.md`
+### Step 8: Scaffold `.documentation/shortcomings.md`
 Generate an unvarnished audit of codebase limitations and technical debt:
 - **Code Debt Markers Table:** Every grepped `TODO`, `FIXME`, `HACK`, `BUG`, or `XXX`:
   | Marker Type | Location | Code Excerpt / Summary | Severity |
@@ -170,7 +184,7 @@ Generate an unvarnished audit of codebase limitations and technical debt:
   > Document known business logic edge cases, planned deprecations, or performance trade-offs known to the core team.
   ```
 
-### Step 8: Scaffold `.documentation/developer-notes.md`
+### Step 9: Scaffold `.documentation/developer-notes.md`
 Generate the operational playbook for engineers:
 - **Tooling & Linter Standards:** Exact lint, typecheck, and formatting toolchain configurations.
 - **Testing Playbook:** Commands to run unit, integration, and E2E test suites with coverage options.
