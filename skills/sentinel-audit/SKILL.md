@@ -21,7 +21,7 @@ This skill performs a lightweight security audit based on the rules defined in `
 - Read `.specs/boundary-conditions.md` to understand the project's specific security contract (e.g., escaping rules, banned functions, required sanitization, architecture constraints).
 
 ### 2. Comprehensive Security Scanning
-- Scan relevant source files (PHP, JS, Python, Go, Rust, etc., depending on the stack) for potential violations.
+- Scan relevant source files across all 18 ecosystems (.NET/C#, Node/TS, Python, Go, Rust, Java/Kotlin, PHP, Dart/Flutter, Ruby, C/C++, Swift, Elixir/Erlang, Solidity/Vyper, Zig/Nim, Haskell, Scala/Clojure, R/Julia, Lua) for potential violations.
 - Systematically evaluate the codebase against common vulnerability classes using pre-trained security knowledge:
   1. **SQL & GraphQL Injection:** Parameterization violations, raw database query concatenations.
   2. **Cross-Site Scripting (XSS) & Template Injection (SSTI):** Unescaped client-side outputs, direct DOM injection wrappers.
@@ -47,6 +47,7 @@ This skill performs a lightweight security audit based on the rules defined in `
   22. **Cascading Teardown & Orphaned Relational State (Rule 37):** Delete, uninstall, or purge routines removing only primary entity rows while leaving behind orphaned junction/pivot records, metadata keys, custom taxonomy terms, transients, scheduled cron jobs, or unlinked storage files.
   23. **Uncached Egress & Outbound API Exhaustion (Rule 38):** Endpoints, admin actions, or hooks making outbound third-party HTTP requests (e.g. GitHub update checks, license checks, external feeds) without persistent caching/transients, cooldown guards, or graceful HTTP 429 rate-limit handling.
   24. **Dynamic DOM Node Concatenation & DOM-XSS Sinks (Rule 39):** Client-side scripts (JavaScript, TypeScript, jQuery) constructing dynamic DOM elements by concatenating runtime variables into HTML sinks (`.html(...)`, `innerHTML`, `insertAdjacentHTML`) instead of declarative element creation APIs (`createElement`, `$('<tag>', ...)`) and missing URL scheme validation (`javascript:`).
+  25. **Smart Contract & Systems Seams (Rule 19):** Reentrancy, integer overflow/underflow, oracle manipulation, unchecked call returns, and tx.origin auth in Solidity/Vyper; raw pointer out-of-bounds, use-after-free, and unchecked allocations in C/C++/Zig; actor mailbox flooding and supervisor crash loops in Elixir/Erlang.
 
 ### 3. Save and Output Report
 - Automatically create a markdown file inside the `.memory-bank/audits/` directory named `audit-<short-commit-hash>.md` (use fallback `audit-<YYYY-MM-DD>.md` if git history is unavailable) and save the complete report there.

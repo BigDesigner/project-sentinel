@@ -376,7 +376,34 @@ Scan for the following ecosystem-specific file signatures:
 - `*.pro` (Qt/QMake)
 
 **C# / .NET:**
-- `.sln`, `.csproj`
+- `.sln`, `.csproj`, `.fsproj`, `nuget.config`, `Directory.Build.props`
+
+**Swift / Apple:**
+- `Package.swift`, `Podfile`, `Cartfile`, `*.xcodeproj`, `*.xcworkspace`
+
+**Ruby / Rails:**
+- `Gemfile`, `Gemfile.lock`, `Rakefile`
+
+**Elixir / Erlang:**
+- `mix.exs`, `rebar.config`, `mix.lock`
+
+**Solidity & Vyper (Web3):**
+- `foundry.toml`, `hardhat.config.*`, `truffle-config.js`, `brownie-config.yaml`
+
+**Zig & Nim:**
+- `build.zig`, `build.zig.zon`, `*.nimble`
+
+**Haskell:**
+- `package.yaml`, `*.cabal`, `stack.yaml`
+
+**Scala & Clojure:**
+- `build.sbt`, `deps.edn`, `project.clj`
+
+**R & Julia:**
+- `DESCRIPTION`, `NAMESPACE`, `Project.toml`, `Manifest.toml`
+
+**Lua:**
+- `*.rockspec`, `game.project`, `love.conf`
 
 **Browser / IDE Extensions:**
 - `manifest.json` (browser extension)
@@ -400,7 +427,7 @@ Scan for the following ecosystem-specific file signatures:
 - `bitbucket-pipelines.yml`
 
 **Fallback Language Detection:**
-If no standard manifest or package file is found, count file extensions (`*.php`, `*.kt`, `*.java`, `*.cpp`, `*.cs`, `*.py`, `*.rs`, `*.go`, `*.swift`, `*.dart`) to determine the dominant language.
+If no standard manifest or package file is found, count file extensions across the 18 ecosystems (`*.cs`, `*.fs`, `*.ts`, `*.js`, `*.py`, `*.go`, `*.rs`, `*.java`, `*.kt`, `*.php`, `*.dart`, `*.rb`, `*.cpp`, `*.c`, `*.swift`, `*.ex`, `*.erl`, `*.sol`, `*.vy`, `*.zig`, `*.nim`, `*.hs`, `*.scala`, `*.clj`, `*.r`, `*.jl`, `*.lua`) to determine the dominant language.
 
 ### 1.2 Detect Host Environment and Git State
 

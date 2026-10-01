@@ -16,10 +16,24 @@ This file outlines the communication styling, workflow preferences, and stack-sp
 ## 🛠️ Stack-Specific Agent Behaviors
 
 - **Validation Checks:** Before proposing a git commit, always suggest or run syntax verification appropriate for the stack:
-  - PHP: `php -l <file>`
-  - Node/TypeScript: `pnpm run typecheck` or `npm run lint`
-  - Flutter: `flutter analyze`
+  - .NET / C#: `dotnet build --no-restore`
+  - Node / TypeScript: `pnpm run typecheck` or `npm run lint`
+  - Python: `ruff check <file>` or `mypy <file>`
+  - Go: `go vet ./...` or `golangci-lint run`
   - Rust: `cargo check`
+  - Java / Kotlin: `./gradlew check -x test` or `mvn compile`
+  - PHP: `php -l <file>`
+  - Flutter / Dart: `flutter analyze`
+  - Ruby: `bundle exec rubocop`
+  - C / C++: `cmake --build build` or `clang -fsyntax-only`
+  - Swift: `swift build`
+  - Elixir / Erlang: `mix compile --warnings-as-errors`
+  - Solidity & Vyper: `forge build` or `npx hardhat compile`
+  - Zig & Nim: `zig build` or `nim check <file>`
+  - Haskell: `cabal check` or `cabal build --dry-run`
+  - Scala & Clojure: `sbt compile` or `clj-kondo --lint <file>`
+  - R & Julia: `R CMD check` or `julia -e 'using Pkg; Pkg.precompile()'`
+  - Lua: `luacheck <file>`
 - **Dependency Guardrails:** Never introduce outdated or deprecated libraries. Always inspect the lockfile/manifest to verify dependency alignment.
 - **Security Sanitization:** Follow rules in `.specs/boundary-conditions.md` explicitly. Ensure output variables, templates, and queries are appropriately escaped or bound.
 

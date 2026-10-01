@@ -24,7 +24,7 @@ Unlike other Sentinel skills, this command does NOT require an initialized Memor
   - **Preferences:** Does the user have a preferred backend, frontend, database, or package manager?
 
 ### 2. Proactive Stack Recommendations & Dynamic Web Research
-- Analyze the user's answers and compile 2 or 3 distinct technical stacks (e.g., "Edge-First Monorepo", "Classic Monolith", "Serverless Microservices").
+- Analyze the user's answers and compile 2 or 3 distinct technical stacks drawn from the 18 ecosystems (e.g., .NET Clean Architecture, Web3 Solidity/Foundry EVM dApp, Elixir Phoenix LiveView, Rust Axum High-Performance Service, Python AI/FastAPI Platform, Node/TS Edge Monorepo, Flutter Cross-Platform, Go Cloud Microservices, Zig/Nim Systems Tool, etc.).
 - **Dynamic Research & Pricing Verification (CRITICAL):** Do NOT rely solely on hardcoded limits or historical training data. Offer the user to run a real-time web search (using search/browser tools) to query and verify the latest pricing models, free-tier quotas, bandwidth caps, and terms of service for the proposed technologies.
 - If the user approves, or if you need to resolve ambiguity about current pricing:
   - Actively search the web for terms like `"<provider> pricing free tier limits"` (e.g., `Cloudflare workers pricing limits`, `Neon postgres free tier limits`).

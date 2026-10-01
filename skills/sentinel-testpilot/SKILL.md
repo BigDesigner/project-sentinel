@@ -38,6 +38,16 @@ Detect, from repository files only, the project paradigm, package manager, nativ
 | .NET (`.csproj`, `.sln`) | xUnit, NUnit, MSTest | `dotnet test` | `--collect:"XPlat Code Coverage"` |
 | Dart/Flutter (`pubspec.yaml`) | `flutter_test`, `test` | `flutter test` / `dart test` | `--coverage` |
 | Ruby (`Gemfile`) | RSpec, Minitest | `bundle exec rspec` | SimpleCov |
+| C / C++ (`CMakeLists.txt`, `Makefile`) | GoogleTest, Catch2, CTest | `ctest` / `make test` | gcov / lcov |
+| Swift / Apple (`Package.swift`, `Podfile`) | XCTest, swift-testing | `swift test` | `--enable-code-coverage` |
+| Elixir / Erlang (`mix.exs`, `rebar.config`) | ExUnit, Common Test | `mix test` | `--cover` |
+| Solidity & Vyper (`foundry.toml`, `hardhat.config.*`) | Foundry (forge test), Hardhat test | `forge test` / `npx hardhat test` | `--coverage` |
+| Zig & Nim (`build.zig`, `*.nimble`) | built-in `std.testing`, Nim `unittest` | `zig test src/main.zig` / `nimble test` | kcov |
+| Haskell (`package.yaml`, `*.cabal`, `stack.yaml`) | Hspec, Tasty, QuickCheck | `cabal test` / `stack test` | `--enable-coverage` |
+| Scala & Clojure (`build.sbt`, `project.clj`) | ScalaTest, MUnit, clojure.test | `sbt test` / `lein test` | sbt-scoverage |
+| R & Julia (`DESCRIPTION`, `Project.toml`) | testthat (R), Test (Julia) | `Rscript -e 'testthat::test_dir("tests")'` / `julia --project -e 'using Pkg; Pkg.test()'` | covr / Coverage.jl |
+| Lua (`*.rockspec`, `love.conf`) | busted, telescope | `busted` | luacov |
+
 
 - **Package manager:** infer from the lockfile (`pnpm-lock.yaml`→pnpm, `yarn.lock`→yarn, `package-lock.json`→npm). Never switch a project's package manager.
 - **Existing config:** locate and reuse `jest.config.*`, `vitest.config.*`, `playwright.config.*`, `conftest.py`, `pytest.ini`, `phpunit.xml`, etc. Do not create a parallel configuration.
@@ -85,6 +95,14 @@ Only when integration or E2E tests require a running app:
   - **8. Dart/Flutter (Web, Mobile, Desktop):** Use `flutter test` for widgets/unit, and `flutter test integration_test/` or `dart test` for integration.
   - **9. Ruby (Rails, Sinatra):** Use `rails test` / `rspec` with `Rack::Test` or Capybara for system tests.
   - **10. Cloudflare Workers & Serverless:** Use `miniflare` or `wrangler dev --local` for local Worker + D1 / KV / R2 emulation.
+  - **11. C / C++ (Native):** Use CMake with CTest, GoogleTest fixtures (`::testing::Test`), or in-memory SQLite / mock socket drivers.
+  - **12. Swift / Apple (iOS/macOS/Server):** Use `XCTestCase` / `swift-testing` with Vapor's `Application.test(.GET, ...)` or in-memory CoreData/SwiftData store.
+  - **13. Elixir / Erlang (BEAM):** Use `ExUnit.Case` with `Phoenix.ConnTest` and `Ecto.Adapters.SQL.Sandbox` for isolated database transaction rollbacks.
+  - **14. Solidity & Vyper (Web3):** Use Foundry `forge test` with cheatcodes (`vm.prank`, `vm.deal`, `vm.expectRevert`) against local Anvil EVM, or Hardhat Network.
+  - **15. Zig & Nim (Systems):** Use `std.testing.allocator` to detect zero memory leaks in Zig; use Nim `unittest` / `testament` with mock procedures.
+  - **16. Haskell (Pure Functional):** Use Hspec / Tasty with `Network.Wai.Test` and SQLite in-memory Persistent storage.
+  - **17. Scala & Clojure (JVM Functional):** Use ScalaTest `OneServerPerSuite` / Http4s client; use Clojure `clojure.test` with `ring.mock.request`.
+  - **18. R, Julia & Lua:** Use R `testthat` with `withr::local_tempfile`; Julia `Test` with temporary scratch modules; Lua `busted` with mock environment tables.
 - Define teardown up front (stop the server, drop/reset the test DB) and guarantee it runs in Step 10 even if tests fail.
 
 ### Step 6. Test Authoring (Native Conventions, Deterministic)

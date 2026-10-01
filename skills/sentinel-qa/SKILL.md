@@ -28,7 +28,25 @@ This is a proactive "Red Team" security and quality assurance skill. Instead of 
 - Write **Negative Test Cases** that intentionally attempt to bypass the rules.
   - Example: If a rule says "All SQL must use parameterized queries", generate a test that injects `'; DROP TABLE users;--` and asserts that the query fails safely or escapes the payload.
   - Example: If a rule says "File uploads must reject `.exe` files", generate a test trying to upload `malware.exe` and assert an HTTP 400 response.
-- Ensure the tests are written in the project's native testing framework (e.g., `pytest`, `Jest`, `PHPUnit`, `go test`).
+- Ensure the tests are written in the project's native testing framework across all 18 ecosystems:
+  - **.NET:** xUnit (`[Fact]`, `Assert.Throws<T>`), NUnit
+  - **Node / TypeScript:** Vitest / Jest (`expect(() => ...).toThrow()`, Supertest)
+  - **Python:** pytest (`pytest.raises(Exception)`), unittest
+  - **Go:** `go test` (`if err == nil { t.Fatalf(...) }`)
+  - **Rust:** built-in `#[test]` (`#[should_panic]`)
+  - **Java / Kotlin:** JUnit 5 (`assertThrows(...)`), MockMvc
+  - **PHP:** PHPUnit / Pest (`$this->expectException(...)`)
+  - **Dart / Flutter:** `flutter_test` (`expect(() => ..., throwsA(...))`)
+  - **Ruby:** RSpec (`expect { ... }.to raise_error(...)`)
+  - **C / C++:** GoogleTest (`EXPECT_THROW`, `ASSERT_DEATH`), Catch2
+  - **Swift:** XCTest (`XCTAssertThrowsError`), swift-testing
+  - **Elixir:** ExUnit (`assert_raise ...`)
+  - **Solidity & Vyper:** Foundry (`vm.expectRevert(...)`, fuzzing with `forge test`)
+  - **Zig & Nim:** Zig `std.testing.expectError`, Nim `unittest.expect`
+  - **Haskell:** Hspec (`shouldThrow`)
+  - **Scala & Clojure:** ScalaTest (`an [...] should be thrownBy`), Clojure `is (thrown? ...)`
+  - **R & Julia:** R `expect_error`, Julia `@test_throws`
+  - **Lua:** Busted (`assert.has_error(...)`)
 
 ### 4. Output and Placement
 - Save the generated test files into the project's standard test directory (e.g., `tests/security/`, `spec/redteam/`).

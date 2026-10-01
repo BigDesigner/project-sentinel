@@ -22,7 +22,7 @@ This skill acts as an Architectural Drift Detector. Over time, codebases deviate
 - Read `.specs/boundary-conditions.md` (Security and Tech Stack Limits).
 
 ### 2. Reality Scanning (Cross-IDE Compatible)
-- Scan key project manifests (`package.json`, `requirements.txt`, `pubspec.yaml`, `Cargo.toml`, etc.).
+- Scan key project manifests across all 18 ecosystems (`.csproj`, `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `build.gradle`/`pom.xml`, `composer.json`, `pubspec.yaml`, `Gemfile`, `CMakeLists.txt`, `Package.swift`, `mix.exs`, `foundry.toml`, `build.zig`, `package.yaml`, `build.sbt`, `DESCRIPTION`/`Project.toml`, `*.rockspec`).
 - Scan infrastructure directories (`.github/workflows/`, `docker/`, etc.).
 - Use deterministic, platform-agnostic tools to read these files (e.g., built-in agent read tools, not specific bash/powershell commands).
 

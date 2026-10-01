@@ -19,12 +19,25 @@ This skill acts as a Developer Environment Space Optimizer and Dependency Garbag
 
 ### 1. Identify Bloat Candidates
 - **Permission Boundaries Check:** Read `.agents/runtime-manifest.json` if it exists. Verify that any directories targeted for deletion are inside the `write_allowed_paths` manifest (if defined) and do NOT conflict with any `restricted_paths` settings. Strictly reject pruning any restricted paths.
-- Scan the project workspace for the following dependency and build structures:
-  - **Node/JS:** `node_modules/`, `.svelte-kit/`, `.next/`, `dist/`, `.turbo/`
-  - **Python:** `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`
+- Scan the project workspace for the following dependency and build structures across all 18 ecosystems:
+  - **Node / TypeScript:** `node_modules/`, `.svelte-kit/`, `.next/`, `dist/`, `.turbo/`, `.nuxt/`, `.astro/`
+  - **Python:** `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `*.egg-info/`
+  - **.NET / C# / F#:** `bin/`, `obj/`, `TestResults/`, `.vs/`
   - **Rust:** `target/`
-  - **Flutter/Dart:** `build/`, `.dart_tool/`
-  - **Go:** Go build cache structures.
+  - **Go:** `vendor/` (if redundant with Go module cache)
+  - **Java / Kotlin / Android:** `.gradle/`, `build/`, `target/` (Maven)
+  - **PHP / WordPress / Laravel:** `vendor/`, `storage/framework/cache/`, `storage/framework/views/`
+  - **Dart / Flutter:** `build/`, `.dart_tool/`, `.ephemeral/`
+  - **Ruby / Rails:** `vendor/bundle/`, `tmp/cache/`, `.bundle/`
+  - **C / C++:** `build/`, `cmake-build-*/`, `.conan/`, `out/`
+  - **Swift / Apple:** `.build/`, `DerivedData/`, `Pods/`
+  - **Elixir / Erlang:** `_build/`, `deps/`, `.elixir_ls/`
+  - **Solidity & Vyper:** `cache/`, `out/`, `artifacts/`, `typechain-types/`, `.solhintcache`
+  - **Zig & Nim:** `zig-cache/`, `zig-out/`, `nimcache/`
+  - **Haskell:** `.stack-work/`, `dist-newstyle/`
+  - **Scala & Clojure:** `target/`, `.bloop/`, `.metals/`, `.cpcache/`
+  - **R & Julia:** `.Rproj.user/`, `.julia/compiled/`
+  - **Lua:** `.luarocks/`
 - Calculate the estimated reclaimable disk space (by summing folder sizes if accessible via standard tools, or listing candidates).
 
 ### 2. Formulate Pruning Plan
