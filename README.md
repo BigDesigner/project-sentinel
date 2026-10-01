@@ -117,6 +117,7 @@ Once installed, you can trigger specific workflows using the following commands:
 |---|---|
 | **`/sentinel`** | Full 7-step bootstrap (Analyzes codebase, reorganizes folders, writes specs). |
 | **`/sentinel-mb`** | Initializes or syncs only the `.memory-bank/` structure and active session state. |
+| **`/sentinel-adr`** | Creates, updates, or supersedes Architecture Decision Records with bi-directional lineage linking. |
 | **`/sentinel-grill`** | Interrogates the user in an empty directory to architect the tech stack, then bootstraps a custom-tailored Memory Bank. |
 | **`/sentinel-scan`** | Scans the repository for all `*.md` and `*.txt` files and outputs a categorized documentation inventory. |
 | **`/sentinel-audit`** | Scans source files for common vulnerabilities (SQLi, XSS, RCE, IDOR, etc.) and security contract violations. Report-only. |

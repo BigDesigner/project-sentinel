@@ -2,14 +2,14 @@
 name: sentinel-help
 description: >-
   Displays a comprehensive help menu and command catalog for the Sentinel Agent Memory Bank.
-  Prints descriptions of all 19 commands, classifying them into Auto-Triggerable and Explicit-Only (Deterrent) categories.
+  Prints descriptions of all 20 commands, classifying them into Auto-Triggerable and Explicit-Only (Deterrent) categories.
   Use when asked for help, to list available commands, explain how a skill works, or show framework documentation.
 ---
 
 # `sentinel-help` Skill
 
 ## Overview
-This skill acts as a Framework Navigator and Command Reference. It prints a detailed catalog explaining the purpose, safety level, required inputs, and output files of all 19 commands in the Sentinel Agent Memory Bank.
+This skill acts as a Framework Navigator and Command Reference. It prints a detailed catalog explaining the purpose, safety level, required inputs, and output files of all 20 commands in the Sentinel Agent Memory Bank.
 
 ## Execution Steps
 
@@ -33,6 +33,7 @@ This skill acts as a Framework Navigator and Command Reference. It prints a deta
 |---|---|---|
 | `/sentinel` | Auto-Triggerable | Executes the full 7-step bootstrap procedure to initialize or migrate a project to the Sentinel Agent Memory Bank. Creates `.memory-bank/`, `.specs/`, `.agents/`, and `.tasks/` folders. |
 | `/sentinel-mb` | Auto-Triggerable | Initializes or syncs only the `.memory-bank/` directories and the active session state config without modifying project files. |
+| `/sentinel-adr` | Auto-Triggerable | Creates, audits, and supersedes Architecture Decision Records under `.memory-bank/adr/`. Enforces bi-directional lineage linking between new and superseded records. |
 | `/sentinel-grill` | Auto-Triggerable | Interrogates the user in an empty/new directory to architect the tech stack, then bootstraps a custom-tailored Memory Bank. |
 | `/sentinel-scan` | Auto-Triggerable | Scans the repository for all markdown (`*.md`) and text (`*.txt`) files, outputting a categorized documentation inventory in chat. |
 | `/sentinel-audit` | Auto-Triggerable | Perform a report-only security audit of the source code checking for common vulnerabilities (SQLi, XSS, RCE, IDOR, etc.) using pre-trained model knowledge and rules in `.specs/boundary-conditions.md`. Writes report to `.memory-bank/audits/audit-<hash>.md`. |

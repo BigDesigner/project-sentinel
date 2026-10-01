@@ -76,6 +76,10 @@ This directive is designed for any repository, regardless of programming languag
 17. **Cryptographic Governance Integrity (FIM Baseline).**
     Core governance and memory bank specifications must maintain a cryptographic baseline tracked in `active-session.json`. Any silent truncation or unauthorized mutation outside of confirmed user instructions must be flagged as an integrity breach.
 
+18. **Autonomous ADR & Lineage Invariant.**
+    Architectural decisions (new dependencies, schema shifts, auth models, third-party integrations, or structural pattern evolutions) must be documented under `.memory-bank/adr/`. When an architectural decision supersedes an earlier decision, bi-directional lineage links (`Supersedes` / `Superseded by`) must be maintained across both the new and predecessor ADR files to prevent contradictory guidance.
+
+
 
 ---
 
@@ -821,6 +825,8 @@ Use this template for every ADR:
 - **Status**: [Accepted | Proposed | Superseded | Deprecated]
 - **Confidence**: [Verified | Inferred | Unconfirmed]
 - **Date**: [YYYY-MM-DD]
+- **Supersedes**: [ADR-XXXX: Title | None]
+- **Superseded By**: [ADR-YYYY: Title | None]
 
 ## Context
 
@@ -838,6 +844,12 @@ Use this template for every ADR:
 
 [Links to files, configs, or commits that support this decision.]
 ```
+
+**Bi-Directional Lineage Rule (CRITICAL):** When an architectural decision replaces, amends, or contradicts an existing ADR:
+1. The new ADR MUST declare `- **Supersedes**: [ADR-XXXX: Title](file://.memory-bank/adr/XXXX-title.md)` and detail in Context/Decision why the direction shifted.
+2. The predecessor ADR MUST be immediately updated: set `- **Status**: Superseded by [ADR-YYYY: Title](file://.memory-bank/adr/YYYY-title.md)` and `- **Superseded By**: [ADR-YYYY: Title]`, accompanied by a warning alert banner at the top of the file.
+3. Contradictory architectural decisions must never remain active simultaneously without lineage links.
+
 
 ### 3.6 `.memory-bank/changelog/verified-worklog.md`
 

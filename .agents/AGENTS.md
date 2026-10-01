@@ -162,6 +162,20 @@ When recording defects or recurring issues in `.memory-bank/bugs/` or session ta
 ## 34. Cryptographic Governance Integrity & Baseline Verification (CRITICAL — FIM Baseline Guard)
 Core governance artifacts (`.specs/`, `.memory-bank/`, `.agents/`) must have their cryptographic baseline (SHA-256 hashes or file state) tracked and verified by `/sentinel-doctor` and `/sentinel-mb`. Any silent truncation, accidental deletion, or unauthorized mutation of governance specifications outside of explicit user commands MUST be flagged as `🔴 GOVERNANCE INTEGRITY VIOLATION / MUTATION DETECTED`.
 
+## 35. Autonomous Architecture Decision (ADR) Protocol & Lineage Invariant (CRITICAL)
+Architectural decisions MUST NEVER be left undocumented or decoupled from history. When executing implementation tasks across all ecosystems:
+1. **Mandatory Autonomous ADR Triggers:** An agent MUST proactively draft an ADR under `.memory-bank/adr/XXXX-<title>.md` whenever code changes introduce:
+   - **Foundational Dependencies:** Adding a new ORM, state management library, caching layer (e.g. Redis), validation framework, or HTTP/transport client.
+   - **Persistence & Schema Evolution:** Introducing a new database table, primary storage driver, partition key, or structural migration.
+   - **Auth & Boundary Models:** Changing authentication strategies (e.g. Session to JWT/OAuth), authorization engines (RBAC/ABAC), or encryption standards.
+   - **External Service Integration:** Connecting third-party billing/payments (Stripe), email providers, cloud object stores (S3/R2), or external AI APIs.
+   - **Structural & Pattern Shifts:** Refactoring directory topologies, switching design patterns (e.g. Active Record to Data Mapper/Repository), or defining public API wire contracts.
+2. **Bi-Directional Lineage Linking (Superseding Contract):** When an architectural decision alters, amends, or contradicts a previous ADR:
+   - **In the New ADR:** The header MUST specify `- **Supersedes**: [ADR-XXXX: Title](file://.memory-bank/adr/XXXX-title.md)` and detail in Context/Decision why the historical decision was abandoned or evolved.
+   - **In the Old ADR:** The agent MUST immediately update the predecessor ADR: modify its header to `- **Status**: Superseded by [ADR-YYYY: Title](file://.memory-bank/adr/YYYY-title.md)`, and prepend a historical amendment notice.
+   - Under no circumstances may an agent leave contradicting ADRs active without explicit lineage links.
+
+
 
 
 
