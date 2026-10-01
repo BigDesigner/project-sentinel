@@ -1,7 +1,7 @@
 ---
 name: sentinel-docgen
 description: >-
-  Scans the codebase via static inspection to scaffold an evidence-backed technical documentation suite under .documentation/ without modifying application code. Reads manifests, schemas, routes, and configs across any ecosystem (.NET, Node, Python, Go, Rust, Java, PHP, Flutter, Ruby). Writes 6 modular markdown documents: system-architecture.md, readme.md, shortcomings.md, developer-notes.md, api-reference.md, and data-dictionary.md with details accordions and tables. Injects structured human-input slots for unprovable business context with zero decorative emojis. Use when asked to generate documentation, document architecture, or build API reference.
+  Scans the codebase via static inspection across 18 ecosystems (.NET, Node, Python, Go, Rust, Java, PHP, Flutter, Ruby, C/C++, Swift, Elixir, Solidity, Zig, Nim, Haskell, Scala, Julia) to scaffold an evidence-backed documentation suite under .documentation/ without modifying application code. Reads manifests, schemas, routes, and configs. Writes 6 modular markdown documents: system-architecture.md, readme.md, shortcomings.md, developer-notes.md, api-reference.md, and data-dictionary.md with details accordions and tables. Injects structured human-input slots with zero decorative emojis. Use when asked to generate documentation, document architecture, or build API reference.
 ---
 
 # `sentinel-docgen` Skill
@@ -51,7 +51,14 @@ The skill executes stack-specific static analysis according to this universal ma
 | **Ruby on Rails** | `Gemfile`, `Gemfile.lock` | `config.ru`, `bin/rails` | Rails `config/routes.rb`, Sinatra routes, Grape APIs, Sidekiq workers | ActiveRecord models (`app/models/`), migrations (`db/migrate/`) | `config/database.yml`, `config/environments/*.rb`, `.env` |
 | **C / C++** | `CMakeLists.txt`, `Makefile`, `meson.build`, `vcpkg.json`, `conanfile.txt` | `main.cpp`, `main.c` | Public headers (`include/*.h`, `*.hpp`), exported dynamic library symbols | SQLite embedded queries, custom binary serialization, flatbuffers | Config files (`*.conf`, `*.ini`, JSON/YAML) |
 | **Elixir / Phoenix** | `mix.exs`, `mix.lock` | `lib/*/application.ex` | Phoenix `router.ex`, LiveView channels, Plug pipelines | Ecto schemas and migrations (`priv/repo/migrations/`) | `config/config.exs`, `config/runtime.exs` |
-| **Swift / Apple** | `Package.swift`, `Podfile` | `@main struct App`, `AppDelegate.swift` | SwiftUI view routes, coordinator navigation, UIKit view controllers | CoreData (`.xcdatamodeld`), SwiftData `@Model` classes | `Info.plist`, xcconfig files, asset catalogs |
+| **Swift / Apple** | `Package.swift`, `Podfile`, `Cartfile` | `@main struct App`, `AppDelegate.swift`, `main.swift` | SwiftUI view routes, coordinator navigation, UIKit view controllers, Vapor routes | CoreData (`.xcdatamodeld`), SwiftData `@Model` classes, Fluent ORM | `Info.plist`, xcconfig files, asset catalogs |
+| **Solidity & Vyper** | `foundry.toml`, `hardhat.config.*`, `truffle-config.js`, `brownie-config.yaml` | `contracts/*.sol`, `src/*.sol`, `contracts/*.vy` | Public/external ABI functions (`function ... external`), ERC standards (ERC-20/721/1155/4337), events & errors | EVM storage variables (`mapping`, arrays, structs, storage slots), Diamond proxy facets | Network configs, RPC URLs, chain IDs, Etherscan keys in `.env` |
+| **Zig & Nim** | `build.zig`, `build.zig.zon`, `*.nimble` | `src/main.zig`, `src/lib.zig`, `src/*.nim` | Exported C-ABI functions (`export fn`), Zap/Httpbeast routes, CLI command parsers | SQLite Zig bindings, raw allocators, Nim Norm ORM | `build.zig` options, compiler flags, `.env` |
+| **Haskell** | `package.yaml`, `*.cabal`, `stack.yaml` | `app/Main.hs`, `src/Lib.hs` | Servant API types (`type API = ...`), Yesod dispatchers, Scotty routes | Persistent (`models` quasiquoter), Esqueleto, Opaleye, raw PostgreSQL | `.env`, YAML config files |
+| **Scala & Clojure** | `build.sbt` (Scala), `deps.edn`, `project.clj` (Clojure) | `object Main extends App`, `src/*/core.clj` (`-main`) | Akka HTTP / Pekko routes, Play Framework `conf/routes`, Http4s, Compojure/Reitit | Slick, Quill, Doobie (Scala), Next.jdbc, HugSQL, HoneySQL (Clojure) | `application.conf` (HOCON), `config.edn` |
+| **R & Julia** | `DESCRIPTION`, `NAMESPACE` (R), `Project.toml`, `Manifest.toml` (Julia) | `R/`, `app.R` (Shiny), `src/*.jl` | Plumber API (`#* @get /path`), Oxygen.jl / Genie.jl routes | Arrow files, Parquet, SQLite DBI, DuckDB, JuliaDB | `.Renviron`, `.Rprofile`, `startup.jl` |
+| **Lua** | `*.rockspec` (Luarocks), `game.project` (Defold), `love.conf` (LOVE2D) | `main.lua`, `init.lua` | OpenResty `location` Lua blocks, LOVE event callbacks, Neovim commands, Redis EVAL scripts | Lua tables, SQLite3 Lua bindings, Redis data structures | `config.lua`, `settings.lua`, environment tables |
+
 
 ---
 
