@@ -42,7 +42,11 @@ This skill performs a lightweight security audit based on the rules defined in `
   17. **Cross-Stack Payload Type Mismatches (Rule 27):** Backend validation schemas (Zod, Pydantic, DTOs) expecting payload types (e.g. string) that conflict with frontend API client payloads (e.g. object/map).
   18. **CRUD Key Generator Inconsistencies & Zombie Data Risks (Rule 28):** Inconsistent ID generation patterns between resource creation and deletion handlers leading to un-deletable zombie records.
   19. **Unsanitized LLM System Prompt Injections (Rule 29):** Raw user input, DB values, or corrections interpolated into LLM System Prompts without sanitization or prompt templates.
-
+  20. **Semantic Sanitization Mismatches & Multiline Truncation (Rule 36):** Single-line string trimmers or sanitizers (e.g. `sanitize_text_field`, aggressive `trim()`, regex stripping `\r\n`) applied to structured multiline textareas, code blocks, or delimited inputs, destroying formatting needed by downstream parsers.
+  21. **Ingestion Normalization Pipeline Inversion (Rule 36):** Evaluating, validating, or sanitizing raw network/HTTP inputs prior to transport and encoding normalization (e.g. missing `wp_unslash`, raw percent-decoding, or Unicode NFC normalization before sanitization).
+  22. **Cascading Teardown & Orphaned Relational State (Rule 37):** Delete, uninstall, or purge routines removing only primary entity rows while leaving behind orphaned junction/pivot records, metadata keys, custom taxonomy terms, transients, scheduled cron jobs, or unlinked storage files.
+  23. **Uncached Egress & Outbound API Exhaustion (Rule 38):** Endpoints, admin actions, or hooks making outbound third-party HTTP requests (e.g. GitHub update checks, license checks, external feeds) without persistent caching/transients, cooldown guards, or graceful HTTP 429 rate-limit handling.
+  24. **Dynamic DOM Node Concatenation & DOM-XSS Sinks (Rule 39):** Client-side scripts (JavaScript, TypeScript, jQuery) constructing dynamic DOM elements by concatenating runtime variables into HTML sinks (`.html(...)`, `innerHTML`, `insertAdjacentHTML`) instead of declarative element creation APIs (`createElement`, `$('<tag>', ...)`) and missing URL scheme validation (`javascript:`).
 
 ### 3. Save and Output Report
 - Automatically create a markdown file inside the `.memory-bank/audits/` directory named `audit-<short-commit-hash>.md` (use fallback `audit-<YYYY-MM-DD>.md` if git history is unavailable) and save the complete report there.

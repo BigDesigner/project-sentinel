@@ -175,6 +175,35 @@ Architectural decisions MUST NEVER be left undocumented or decoupled from histor
    - **In the Old ADR:** The agent MUST immediately update the predecessor ADR: modify its header to `- **Status**: Superseded by [ADR-YYYY: Title](file://.memory-bank/adr/YYYY-title.md)`, and prepend a historical amendment notice.
    - Under no circumstances may an agent leave contradicting ADRs active without explicit lineage links.
 
+## 36. Semantic Sanitization & Ingestion Normalization Sequence (CRITICAL — Anti-Semantic Mismatch)
+Data sanitization and normalization across all ecosystems (Node/TS, Python, Go, Rust, Java, .NET, PHP, Dart/Flutter, Ruby) MUST preserve the semantic structure of the data type and execute in strict processing order:
+1. **Semantic Type Matching:** Single-line string sanitizers or trimmers (e.g. `sanitize_text_field`, aggressive `trim()`, newline-stripping regexes) MUST NEVER be applied to structured multiline text (textareas, markdown, code snippets, CSV/TSV, delimited lists). Stripping carriage returns or line breaks (`\r\n`) destroys data needed by downstream parsers and regex splitters. Always use multiline-preserving sanitizers (e.g. `sanitize_textarea_field`, HTML purifiers, or structured parser sanitizers).
+2. **Ingestion Normalization Sequence:** Incoming network payloads MUST follow the strict 4-stage ingestion pipeline:
+   - **Stage 1: Transport & Encoding Normalization:** Strip magic quotes / unslash (`wp_unslash`), decode percent-encoding, or normalize Unicode (NFC) *before* any security evaluation.
+   - **Stage 2: Semantic Sanitization:** Cleanse unwanted characters while preserving legitimate data semantics according to data type.
+   - **Stage 3: Validation & Whitelisting:** Enforce strict type, schema (Zod/Pydantic/DTOs), and value boundary constraints.
+   - **Stage 4: Contextual Output Escaping / Parameter Binding:** Escape or bind data strictly at the final storage (SQL parameterization) or rendering sink (contextual HTML/URL/attribute escaping). Sanitizing input is never a substitute for output escaping.
+
+## 37. Cascading Relational Lifecycle & Zero-Orphan Cleanup Mandate (CRITICAL)
+Resource teardown, hard deletion, and uninstall routines across all architectures and stacks MUST purge the complete relational dependency graph. Removing only the primary entity (e.g., custom post type row, user table row, model instance) while leaving orphaned relational records is strictly prohibited:
+1. **Relational & Junction Tables:** All associated pivot/junction rows (`term_relationships`, join tables, foreign key children) must be deleted via foreign key cascading constraints or explicit cascading queries.
+2. **Entity Metadata & Attributes:** All secondary attributes (`postmeta`, `usermeta`, attribute key-value pairs) linked to deleted entities must be purged.
+3. **Taxonomy & Category Orphans:** Custom taxonomies, categories, or term records created solely for the uninstalled module or deleted entity must be cleaned if no references remain.
+4. **Transient & Cache State:** Stored cache keys, transients, scheduled background jobs (cron, BullMQ, Celery), and queue messages belonging to the deleted entity or package must be evicted.
+5. **Physical Storage Artifacts:** Uploaded media, temporary local files, or S3/cloud storage blobs associated with deleted entities must be removed to prevent storage leaks.
+
+## 38. Egress Throttling & Outbound API Cooldown Guard (Anti-Exhaustion & Anti-Ban Rule)
+Any endpoint, webhook handler, admin screen, or background routine that initiates outbound third-party API requests (e.g., GitHub release checks, license verification, external feeds, payment gateways) MUST implement a persistent cooldown, cache, or throttling barrier:
+1. **Persistent Cache / Transient Barrier:** Outbound network responses MUST be cached (via Redis, database transients, local file cache, or reverse proxy) with an appropriate TTL (e.g., 5 to 60 minutes) so repeated user/admin requests or page reloads never fire redundant external network calls.
+2. **Graceful Quota Handling:** Code MUST explicitly check and handle rate-limiting responses (e.g. HTTP 429 Too Many Requests, GitHub 60 req/hr unauthenticated limit, `X-RateLimit-Remaining`) without throwing unhandled exceptions, crashing screens, or degrading overall application functionality.
+3. **Trigger Cooldowns:** Manual "Check Now" or refresh actions triggered by users MUST enforce a minimum debounce/cooldown interval (e.g., rate-limiting manual checks to once per 60 seconds) to prevent intentional or accidental denial-of-service / IP banning by upstream providers.
+
+## 39. Declarative DOM Node Construction Invariant (CRITICAL — Anti-String-DOM & DOM-XSS Guard)
+Dynamic user interface elements in client-side scripts (JavaScript, TypeScript, jQuery, Web Components, vanilla DOM) MUST NEVER be constructed via raw string concatenation interpolated into HTML sinks (`.html('<img src="' + url + '">')`, `innerHTML`, `insertAdjacentHTML`, `outerHTML`):
+1. **Native Node Creation:** Elements, tags, and attributes MUST be created declaratively using native DOM manipulation APIs (`document.createElement()`, `element.setAttribute()`, `element.textContent`), library-level builders (e.g., jQuery `$('<tag>', { attr: ... })`), JSX/TSX virtual DOM nodes, or template clones (`<template>` / `cloneNode(true)`).
+2. **Attribute & Protocol Sanitization:** Dynamic attribute values (especially `href`, `src`, `action`, `formaction`) must be strictly validated against safe URL schemes (`http:`, `https:`, `mailto:`, relative paths) before assignment to prevent `javascript:` pseudoprotocol injection and DOM-based Cross-Site Scripting (DOM XSS).
+
+
 
 
 

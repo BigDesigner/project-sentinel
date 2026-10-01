@@ -79,6 +79,19 @@ This directive is designed for any repository, regardless of programming languag
 18. **Autonomous ADR & Lineage Invariant.**
     Architectural decisions (new dependencies, schema shifts, auth models, third-party integrations, or structural pattern evolutions) must be documented under `.memory-bank/adr/`. When an architectural decision supersedes an earlier decision, bi-directional lineage links (`Supersedes` / `Superseded by`) must be maintained across both the new and predecessor ADR files to prevent contradictory guidance.
 
+19. **Semantic Sanitization & Ingestion Normalization Sequence (Anti-Semantic Mismatch).**
+    Single-line string sanitizers or trimmers (e.g. `sanitize_text_field`, aggressive `trim()`, newline-stripping regexes) must never be applied to structured multiline text (textareas, markdown, code blocks, CSV/TSV) as stripping line breaks (`\r\n`) breaks downstream parsers. Ingestion must follow the strict 4-stage pipeline: (1) Transport & encoding unslashing/decoding -> (2) Semantic-aware sanitization -> (3) Schema validation & whitelisting -> (4) Contextual output escaping & parameterization.
+
+20. **Cascading Relational Lifecycle & Zero-Orphan Cleanup Mandate.**
+    Uninstall, purge, and hard delete routines must clean the complete relational graph (primary records, junction/pivot tables, metadata keys, custom taxonomy terms, cache/transients, scheduled crons, and storage files). Leaving zombie data or orphaned rows upon teardown is strictly prohibited.
+
+21. **Egress Throttling & Outbound API Cooldown Guard (Anti-Exhaustion & Anti-Ban Rule).**
+    Outbound third-party API calls triggered by users/admins must implement persistent caching/transients (5-60 min TTL), graceful HTTP 429 rate-limit handling, and minimum debounce cooldowns on manual re-fetch actions to prevent third-party quota exhaustion and host IP banning.
+
+22. **Declarative DOM Node Construction Invariant (Anti-String-DOM & DOM-XSS Guard).**
+    Dynamic UI elements in client scripts must be constructed declaratively via native DOM APIs (`createElement`), library builders, or template clones, never via raw string concatenation into HTML sinks (`innerHTML`, `.html()`), with strict URL scheme whitelisting against `javascript:` pseudoprotocols.
+
+
 
 
 ---
@@ -951,6 +964,10 @@ Include:
   3. **`(CI/CD) Artifact-to-Job Completeness:`** Before finalizing any pipeline file, enumerate all deployable artifacts in the project (e.g., backend API, frontend SPA, mobile build, database migrations, worker scripts, scheduled jobs). Every artifact MUST have a corresponding pipeline job. Missing a job means that artifact is silently never deployed after code changes — a blind spot that only surfaces in production. This check MUST be performed explicitly, not assumed.
   4. **`(CI/CD) Post-Push Live Pipeline Verification:`** After executing `git push` on a project with CI/CD pipelines, the agent MUST NOT consider its work complete until the remote pipeline status is verified. The agent MUST use platform-native non-blocking tools (e.g., Antigravity `schedule` timers, `gh run watch`, or background status checks) to monitor execution. If the remote pipeline fails, the agent MUST extract failure logs (`gh run view --log-failed`), diagnose the root cause, apply a fix, commit, and push again automatically.
 - **End-to-End Integration & Wiring Contract (CRITICAL — Anti-Illusion Rule):** Enforce that no feature is marked complete unless all 5 links of the feature chain are verified: DB Persistence -> Backend API Handler -> Frontend API Service -> UI Trigger Element -> UI Feedback. Any unwired backend endpoint or dead service method must be flagged as `🔴 UNCONNECTED`.
+- **Semantic Sanitization & Ingestion Normalization Sequence (CRITICAL — Anti-Semantic Mismatch):** Sanitizers must match data semantics; single-line trimmers (`sanitize_text_field`, aggressive `trim()`, newline-stripping regexes) must never be applied to structured multiline text (textareas, markdown, code blocks, CSV/TSV) as stripping line breaks (`\r\n`) breaks downstream parsers. Ingestion must follow the strict 4-stage pipeline: (1) Transport & encoding unslashing/decoding -> (2) Semantic-aware sanitization -> (3) Schema validation & whitelisting -> (4) Contextual output escaping & parameterization.
+- **Cascading Relational Lifecycle & Zero-Orphan Cleanup Mandate (CRITICAL):** Uninstall, purge, and hard delete routines across all stacks must clean the complete relational graph (primary records, junction/pivot tables, metadata keys, custom taxonomy terms, cache/transients, scheduled crons, and storage files). Leaving zombie data or orphaned rows upon teardown is strictly prohibited.
+- **Egress Throttling & Outbound API Cooldown Guard (Anti-Exhaustion & Anti-Ban Rule):** Outbound third-party API calls triggered by users/admins must implement persistent caching/transients (5-60 min TTL), graceful HTTP 429 rate-limit handling, and minimum debounce cooldowns on manual re-fetch actions to prevent third-party quota exhaustion and host IP banning.
+- **Declarative DOM Node Construction Invariant (CRITICAL — Anti-String-DOM & DOM-XSS Guard):** Dynamic UI elements in client scripts must be constructed declaratively via native DOM APIs (`createElement`), library builders, or template clones, never via raw string concatenation into HTML sinks (`innerHTML`, `.html()`), with strict URL scheme whitelisting against `javascript:` pseudoprotocols.
 
 **Legacy Rules Consolidation:** If you found legacy security/audit rules in ad-hoc files during discovery (e.g., `audit.md`, `rules.md`, `notice.md`, `security-standards.md`), analyze them. If they contain valid boundaries, merge their wisdom into this file. If they are harmful or outdated, ignore them. The original ad-hoc files will be archived in Step 4.
 
