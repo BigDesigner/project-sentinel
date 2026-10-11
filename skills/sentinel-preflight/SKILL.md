@@ -24,6 +24,8 @@ This skill acts as a "Release Engineer". Agents often write code perfectly but f
 - Scan CI/CD configuration files (e.g., `.github/workflows/*.yml`).
 - Scan environment configuration files (e.g., `.env.example`, `config.yaml`).
 - Scan deployment manifests (`wrangler.toml`, `docker-compose.yml`, `helm`, `.env.production`) for un-promoted development flags (e.g. `ENVIRONMENT = "development"`), `localhost` CORS origins, debug endpoints, or mock API keys (Rule 30).
+- Scan deployment scripts, workflows, and release hooks to ensure NO direct in-situ code compilation or mutating commands are executed live on production servers via SSH or remote shells (Rule 42).
+- Scan public project documentation (`README.md`, `CONTRIBUTING.md`, `docs/`) to verify zero leakage of internal AI prompts, `.specs/` rules, or Memory Bank directives prior to release (Rule 41).
 - Extract all external dependencies, tokens, and secrets referenced in the code (e.g., `secrets.WINGET_TOKEN`, `process.env.DB_PASSWORD`).
 - Evaluate Native bindings (e.g., CGO requirements, Flutter FFI DLLs).
 

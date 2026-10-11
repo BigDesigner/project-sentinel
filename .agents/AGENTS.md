@@ -212,6 +212,19 @@ When generating or scaffolding technical documentation across any software ecosy
 5. **Zero Decorative Emojis:** Strictly prohibited. Never use decorative emojis (🚀, ✨, 🎉, 💡, 🔥, etc.). Only semantic alert blocks (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`) and minimal severity tags (`[CRITICAL]`, `[HIGH]`, `[OK]`, `[WARNING]`, `[MISSING]`, `⚠️`, `🔴`, `🟢`) are permitted.
 6. **Interactive Documentation Language Selection Gate:** While the codebase, manifests, and technical symbols remain strictly in English (per Rule 8), documentation generated inside `.documentation/` is user/developer-facing. The agent MUST interactively ask the user which language they prefer for the documentation suite (with English as the recommended default standard) before generating any files, ensuring the prose and explanatory narratives match the project team's language preference.
 
+## 41. Public Artifact & Internal Directive Isolation Boundary (CRITICAL — Anti-Meta-Contamination Rule)
+Public user-facing and developer-facing files (`README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `docs/`, user guides, release notes) MUST NEVER contain internal AI agent directives, Memory Bank governance details, `.specs/` rules, system prompts, or agent operational instructions:
+1. **Audience Boundary:** Public documentation is strictly dedicated to human developers and end-users (product overview, quick start, installation instructions, CLI commands, configuration, architecture summaries, licenses).
+2. **Internal AI Isolation:** Internal agent memory, constraints, rules, and prompts MUST remain strictly encapsulated inside `.agents/`, `.memory-bank/`, `.specs/`, and `.tasks/`.
+3. **Zero Meta-Leakage:** Any injection or leakage of internal AI directives or framework governance text into user-facing files MUST be flagged as `🔴 METADATA CONTAMINATION / DIRECTIVE LEAK` and immediately purged.
+
+## 42. Live Remote & Production Mutation Prohibition (CRITICAL — Anti-Cowboy-Coding Rule)
+An agent is strictly prohibited from compiling code (`build`, `compile`), executing interactive tests, or mutating files directly in situ on live remote production servers (via SSH, remote terminal sessions, Docker exec hooks, or live production containers):
+1. **Local & Sandbox Isolation:** All code compilation, testing, and debugging MUST take place in local developer environments, local test containers, or isolated staging pipelines. Live production infrastructure is NEVER a development or testing playground.
+2. **Immutable Deployment Pipeline:** Code reaches production ONLY through verified CI/CD release pipelines or pre-tested release packages (`.zip`, Docker image, tagged Git releases) after 100% of local tests and preflight checks pass.
+3. **Emergency Remote Exception:** In emergency triage where remote logs must be inspected, execution MUST be strictly read-only (`journalctl`, `tail -n 100`, `docker logs`). Mutating production files or compiling live code via SSH is a critical protocol breach.
+
+
 
 
 

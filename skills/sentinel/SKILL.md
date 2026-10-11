@@ -91,8 +91,11 @@ This directive is designed for any repository, regardless of programming languag
 22. **Declarative DOM Node Construction Invariant (Anti-String-DOM & DOM-XSS Guard).**
     Dynamic UI elements in client scripts must be constructed declaratively via native DOM APIs (`createElement`), library builders, or template clones, never via raw string concatenation into HTML sinks (`innerHTML`, `.html()`), with strict URL scheme whitelisting against `javascript:` pseudoprotocols.
 
+23. **Public Artifact & Internal Directive Isolation Boundary (Anti-Meta-Contamination).**
+    Public customer/developer-facing documentation (`README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `docs/`, user guides) must NEVER contain internal AI agent directives, Memory Bank governance notes, system prompts, or agent operational rules. Keep internal AI directives strictly encapsulated inside `.agents/`, `.memory-bank/`, `.specs/`, and `.tasks/`. Any leakage into user-facing files must be flagged as `🔴 METADATA CONTAMINATION / DIRECTIVE LEAK`.
 
-
+24. **Live Remote & Production Mutation Prohibition (Anti-Cowboy-Coding).**
+    Never compile code (`build`, `compile`), run interactive tests, or mutate files directly in situ on live production servers (via SSH, remote shells, exec hooks). All compilation, test verification, and debugging must execute in local or isolated test sandboxes before deploying via CI/CD.
 
 ---
 
