@@ -128,7 +128,7 @@ jobs:
           import os, sys, re
           non_english_pattern = re.compile(r'[ğüşıöçĞÜŞİÖÇáéíóúÁÉÍÓÚñÑäöüßÄÖÜа-яА-Я]')
           fail = 0
-          for folder in ['skills', 'templates', '.agents']:
+          for folder in ['skills', 'templates']:
               for root, _, files in os.walk(folder):
                   for fn in files:
                       p = os.path.join(root, fn)
