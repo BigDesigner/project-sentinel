@@ -79,7 +79,7 @@ Before creating or writing any files into `.documentation/`, the agent MUST inte
   - Source code symbols (function names, class names, file paths, CLI flags, SQL queries, JSON keys) MUST remain in their exact, un-translated code representation.
 
 ### Step 2: Static Codebase Reconnaissance (Read-Only)
-Analyze the workspace without mutating any files:
+Analyze the workspace without mutating any files (first capture a pre-execution **content-identity manifest** of all workspace files outside `.documentation/`: run `git status --porcelain --untracked-files=all` and `git ls-files` to enumerate every tracked, staged, modified, deleted, and individual untracked file outside `.documentation/`, plus any git-ignored config/source files inspected during reconnaissance, and record each file's existence state, byte size, and SHA-256 content digest before reading or creating any files — F18):
 1. **Manifests & Dependencies:** Interrogate package manifests across the Universal Ecosystem Reconnaissance Matrix. Identify pinned dependencies, engines, scripts, and runtime targets.
 2. **Directory & Topology:** Map physical folder layouts, identifying entry points across all detected language stacks, routing directories, models, controllers, and services.
 3. **API & Route Surface:** Grep route definitions, HTTP verbs, path variables, middleware attachments, capability/auth checks, and CLI command registries.
@@ -197,7 +197,7 @@ Generate the operational playbook for engineers:
 ## Post-Execution Verification Gate
 
 Before completing execution:
-1. **Immutability Verification:** Verify via `git status` that NO files outside `.documentation/` were created or modified.
+1. **Content-Identity Immutability Verification (F18):** Re-enumerate all files outside `.documentation/` (`git status --porcelain --untracked-files=all`, `git ls-files`, and any git-ignored files inspected during Step 2) and compare their post-execution SHA-256 content digests, byte sizes, and existence states against the pre-execution content-identity manifest captured at the start of Step 2. Status-row comparison alone is insufficient because modifying an already-dirty (` M`) or already-untracked (`??`) file leaves its status code unchanged while altering its bytes. Verify that ZERO files outside `.documentation/` were created, deleted, or had their SHA-256 content digest altered during the `sentinel-docgen` run. Pre-existing dirty or untracked files whose SHA-256 digests match the pre-execution manifest must NOT be flagged as violations; if any file outside `.documentation/` has a changed SHA-256 digest, report a `🔴 DOCGEN IMMUTABILITY VIOLATION` and NEVER automatically revert or overwrite the user's working tree files.
 2. **Markdown Integrity Check:** Verify all Markdown tables are well-aligned, `<details>` tags are strictly balanced, and Mermaid code blocks contain valid syntax.
 3. **Evidence Citation Check:** Verify every file path cited in the documentation exists in the repository.
 4. **Summary Presentation:** Output a structured completion report to the user summarizing:

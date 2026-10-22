@@ -14,7 +14,7 @@ This skill acts as an Onboarding and Context Briefing tool. When a project grows
 ## Execution Steps
 
 > [!IMPORTANT]
-> **Pre-Execution Initialization Guard:** Before proceeding, confirm the Memory Bank is bootstrapped by checking that `.memory-bank/active-session.json` or the `.specs/` directory exists. If neither is present, HALT, explain in the user's preferred language that the Memory Bank is not initialized, and direct the user to run `/sentinel` or `/sentinel-mb` first. Do not attempt to read missing spec files.
+> **Pre-Execution Initialization Guard (Per-Skill Prerequisite Validation — F07):** Before proceeding, validate that `.memory-bank/active-session.json` (valid JSON), `.memory-bank/system-coherence.md`, `.specs/boundary-conditions.md`, and `.tasks/pipeline.md` exist and are readable. Distinguish between: (a) **Absent / Uninitialized** (direct user to `/sentinel`), (b) **State-Only Setup** (`active-session.json` exists from `/sentinel-mb`, but `system-coherence.md`, `boundary-conditions.md`, or `pipeline.md` is missing — explain which required briefing files are missing and direct user to `/sentinel` for full initialization), and (c) **Corrupt / Unreadable** (`active-session.json` fails JSON parsing or required files are unreadable — direct user to `/sentinel-doctor`). HALT if prerequisites are not met.
 
 ### 1. Read the Entire Memory Bank
 - Read `.memory-bank/system-coherence.md` (Architecture).
@@ -34,7 +34,7 @@ This skill acts as an Onboarding and Context Briefing tool. When a project grows
 - Generate a file named `.memory-bank/state-of-the-union.md`.
 - Print the contents of the file in the chat for immediate reading.
 - Ensure the language and formatting are deterministic and not tied to any specific IDE's rendering engine.
-- **Reporting Language (CRITICAL):** Check `.memory-bank/active-session.json` to verify `preferred_language`. All interactive explanations, chat responses, and the generated onboarding summary (`state-of-the-union.md`) MUST be written and translated naturally in the user's preferred language (e.g., Spanish, French, German, Turkish, etc.).
+- **Reporting vs Disk Language Separation (CRITICAL — F13):** Per Rule 8, the persistent file saved on disk at `.memory-bank/state-of-the-union.md` MUST be written strictly in **English** so all repository and Memory Bank files remain standardized across agents and teams. However, check `.memory-bank/active-session.json` to verify `preferred_language` (or detect from conversation history if unconfirmed): all interactive explanations, chat responses, and the rendered onboarding summary preview shown to the user in the chat MUST be written and translated naturally in the user's preferred language (e.g., Spanish, French, German, Turkish, etc.).
 - **Visual Output Template:** Ensure the generated file strictly follows this Markdown structure. When presenting the summary in the chat response, do NOT wrap the tables or markdown content inside a code block (like ` ```markdown `). Instead, render them directly in the chat message as native Markdown so the chat UI can display them as beautiful, properly formatted tables:
 ````markdown
 # State of the Union: [Project Name]

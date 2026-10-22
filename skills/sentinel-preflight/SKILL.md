@@ -14,7 +14,7 @@ This skill acts as a "Release Engineer". Agents often write code perfectly but f
 ## Execution Steps
 
 > [!IMPORTANT]
-> **Pre-Execution Initialization Guard:** Before proceeding, confirm the Memory Bank is bootstrapped by checking that `.memory-bank/active-session.json` or the `.specs/` directory exists. If neither is present, HALT, explain in the user's preferred language that the Memory Bank is not initialized, and direct the user to run `/sentinel` or `/sentinel-mb` first. Do not attempt to read missing spec files.
+> **Pre-Execution Initialization Guard:** Before proceeding, validate this skill's specific required inputs: `.specs/` (target directory for `preflight-checklist.md`) and `.memory-bank/active-session.json` must exist and be readable. Distinguish between: (a) completely uninitialized workspace (recommend `/sentinel` or `/sentinel-grill`), (b) state-only initialization via `/sentinel-mb` where `.specs/` is missing (create `.specs/` or recommend `/sentinel`), and (c) corrupted `active-session.json`. HALT and explain the exact missing or corrupt prerequisite in the user's preferred language. Do not attempt to read missing spec files.
 
 ### 1. Context and Environment Analysis
 - Analyze the tech stack (e.g., Rust, Go, Flutter, Node.js).

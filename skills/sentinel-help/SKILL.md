@@ -23,7 +23,8 @@ This skill acts as a Framework Navigator and Command Reference. It prints a deta
 
 ### 3. Explain Safety Mechanisms
 - Explain the role of **Auto-Triggerable** vs. **Explicit-Only** safety categories.
-- Highlight the use of `disable-model-invocation: true` and English deterrent warnings in explicit-only skills to prevent model hallucinations from executing mutative/destructive actions.
+- Explain the host-specific controls: Claude Code uses `disable-model-invocation: true`; Codex uses `policy.allow_implicit_invocation: false` in each explicit-only skill's `agents/openai.yaml`. Deterrent descriptions are instructions, not an execution permission mechanism.
+- In Codex CLI and the IDE extension, show `$sentinel-help` and `$sentinel-<name>` invocations (or `/skills`). The slash commands in the catalog are Claude Code notation; do not promise the same slash commands across hosts.
 
 ---
 
@@ -60,7 +61,19 @@ This skill acts as a Framework Navigator and Command Reference. It prints a deta
 ### 1. `disable-model-invocation: true`
 This is a frontmatter flag recognized natively by Claude Code. It completely prevents the AI model from automatically invoking a skill via semantic description matching. It ensures the command runs ONLY when the user explicitly types it in the chat interface.
 
-### 2. Deterrent Descriptions
+### 2. Codex invocation policy
+For the four explicit-only skills, `agents/openai.yaml` contains:
+
+```yaml
+policy:
+  allow_implicit_invocation: false
+```
+
+This preserves explicit `$skill-name` invocation in Codex while disabling implicit
+selection. The Claude Code frontmatter flag is not a substitute for this setting.
+Neither setting grants permission to delete files or bypass host approvals.
+
+### 3. Deterrent Descriptions
 To secure skills on platforms that do not recognize the frontmatter flag (such as Cursor or Windsurf), these skills use a dry, warning, and deterrent description in English (e.g., *"Destructive recovery: executes git reset --hard... Only run when the user explicitly invokes the command. Do not auto-trigger."*). This serves as a prompt-level safety barrier, warning the LLM to steer clear of automatic execution.
 
 ---

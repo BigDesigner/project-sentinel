@@ -17,14 +17,14 @@ The `sentinel-planaudit` skill acts as a "Senior Architect" to review a proposed
 ## Execution Steps
 
 > [!IMPORTANT]
-> **Pre-Execution Initialization Guard:** Before proceeding, confirm the Memory Bank is bootstrapped by checking that `.memory-bank/active-session.json` or the `.specs/` directory exists. If neither is present, HALT, explain in the user's preferred language that the Memory Bank is not initialized, and direct the user to run `/sentinel` or `/sentinel-mb` first. Do not attempt to read missing spec files.
+> **Pre-Execution Initialization Guard:** Before proceeding, validate this skill's specific required inputs: `.specs/boundary-conditions.md`, `.specs/constitution.md`, and `.memory-bank/system-coherence.md` must exist and be non-empty. Distinguish between: (a) completely uninitialized workspace (recommend `/sentinel` or `/sentinel-grill`), (b) state-only initialization via `/sentinel-mb` where `.memory-bank/active-session.json` exists but `.specs/` or `system-coherence.md` is missing (recommend `/sentinel` to generate full architecture and security specs), and (c) corrupted/unreadable files. HALT and explain the exact missing or corrupt prerequisite in the user's preferred language. Do not attempt to read missing spec files.
 
 ### 1. Locate the Active Plan
 Do not guess. Search for the proposed plan document in the following exact order:
-1. **Local Workspace:** Look for `implementation_plan.md`, `plan.md`, or `draft_plan.md` in the root of the current project directory or within `.tasks/`.
+1. **Local Workspace:** Look for `implementation_plan.md`, `plan.md`, or `draft_plan.md` in the root of the current project directory or within `.tasks/`, and store the exact discovered path as `SELECTED_PLAN_PATH` (if multiple exist, list the candidates and ask the user which plan to audit).
 2. **Fallback (No Plan Exists):** If no plan can be found in the workspace, **DO NOT FAIL**. Instead, immediately ask the user:
   > *"No active plan was found in the workspace. Please briefly describe the development you want to make (e.g., 'Let's build a password reset screen'). I will generate a plan for you and audit it against the project standards and security rules."*
-  Halt execution and wait for the user's response. Once provided, generate the plan and proceed to Step 2.
+  Halt execution and wait for the user's response. Once provided, generate the plan at `.tasks/implementation_plan.md` (setting `SELECTED_PLAN_PATH` to that path) and proceed to Step 2.
 
 ### 2. Load Constraints (Context Gathering)
 Read the following files from the project to understand the boundaries:
@@ -43,7 +43,7 @@ Specifically check for:
 
 ### 4. Auto-Correction (Plan Modification)
 - If violations are found, **DO NOT just complain about them.** You are the reviewer.
-- **Directly modify the `implementation_plan.md`** file (using file writing tools) to patch the flaws. 
+- **Directly modify `SELECTED_PLAN_PATH`** (the exact plan file discovered or created in Step 1, never a hardcoded path) using file writing tools to patch the flaws.
 - For example: Add a new sub-step to the plan to include strict output sanitization against XSS, enforce parameterized SQL queries, or replace a proposed `npm install` command with `yarn add`.
 - Add an `### Audit Notes` section to the bottom of the plan detailing what you fixed.
 
@@ -52,7 +52,7 @@ Report back to the user in their preferred language (tracked in `.memory-bank/ac
 
 The report MUST include:
 1. **Audit Summary:** What files were cross-referenced.
-2. **Corrections Applied:** A brief, No Fluff bulleted list of what was changed in the plan to make it compliant. (If no corrections were needed, state that the plan was already perfect).
+2. **Corrections Applied:** A brief, No Fluff bulleted list of what was changed in `SELECTED_PLAN_PATH` to make it compliant. (If no corrections were needed, state that no violations were detected against the checked specifications, while noting any unverified runtime assumptions per Rule 15).
 3. **Approval Request:** A direct question asking the user to approve the newly hardened plan so execution can begin.
 
 **Remember:** Never proceed to executing the plan's actual code changes during this skill. You are strictly auditing the plan document.

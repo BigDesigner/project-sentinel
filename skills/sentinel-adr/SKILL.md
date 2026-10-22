@@ -17,7 +17,7 @@ This skill acts as the Architecture Decision Record (ADR) Steward for the Sentin
 ## Execution Steps
 
 ### Step 1. Pre-Execution Initialization Guard
-Confirm the Memory Bank is bootstrapped by checking that `.memory-bank/active-session.json` or the `.specs/` directory exists. If neither is present:
+Confirm the Memory Bank is bootstrapped by validating that `.memory-bank/active-session.json` exists and parses as valid JSON, and that `.memory-bank/adr/` and `.specs/` are present. Distinguish between: (a) **Absent / Uninitialized**, (b) **State-Only Setup** (`active-session.json` exists from `/sentinel-mb`, but `.specs/constitution.md` or `.specs/boundary-conditions.md` is missing — warn if architectural specs are absent), and (c) **Corrupt / Unreadable** (`active-session.json` fails JSON parsing — direct to `/sentinel-doctor`). If uninitialized:
 1. HALT execution immediately.
 2. Explain to the user in their preferred language that the command cannot run because the Memory Bank is not initialized.
 3. Guide the user to run `/sentinel` (for a full setup), `/sentinel-mb` (for state-only setup), or `/sentinel-grill` (for interactive architecture boot).
@@ -25,7 +25,7 @@ Confirm the Memory Bank is bootstrapped by checking that `.memory-bank/active-se
 ### Step 2. Discovery & Sequential Numbering
 1. Scan `.memory-bank/adr/` for existing records matching `[0-9]{4}-*.md`.
 2. Extract the highest numerical prefix (e.g., `0003-payment-gateway.md` -> `3`).
-3. Assign the next sequential zero-padded 4-digit index (e.g., `0004`). If no records exist, begin with `0001`.
+3. **Atomic Number Reservation (F03):** Acquire `.memory-bank/.session.lock` exclusively (`O_CREAT | O_EXCL` with `owner_session_id`, `pid`, `heartbeat_at`, and `operation: "sentinel-adr"`) and verify ownership BEFORE scanning `.memory-bank/adr/` and assigning the next sequential 4-digit index (e.g., `0004`, or `0001` if no records exist). Hold `.session.lock` until the new ADR file (and any predecessor update) is written to disk, then verify `owner_session_id` before releasing the lock.
 
 ### Step 3. Architectural Decision Classification
 Categorize the incoming decision under one of the 5 mandatory architectural triggers:
@@ -53,7 +53,7 @@ Create `.memory-bank/adr/XXXX-<title-slug>.md` in English following this exact f
 - **Confidence**: [Verified | Inferred | Unconfirmed]
 - **Date**: [YYYY-MM-DD]
 - **Category**: [Dependencies | Persistence | Auth | External Integrations | Structural Topology]
-- **Supersedes**: [ADR-YYYY: Title](file://.memory-bank/adr/YYYY-title.md) (or None)
+- **Supersedes**: [ADR-YYYY: Title](file://.memory-bank/adr/YYYY-title.md) (when Status is Accepted; use `Proposes to Supersede` when Status is Proposed, or None)
 - **Superseded By**: None
 
 ## Context
@@ -76,7 +76,9 @@ Create `.memory-bank/adr/XXXX-<title-slug>.md` in English following this exact f
 ````
 
 ### Step 6. Bi-Directional Lineage Linking (CRITICAL)
-When the new ADR supersedes an existing predecessor:
+When the new ADR targets an existing predecessor, enforce strict state-transition rules (F06):
+- **If the new ADR is `Status: Proposed`:** Do NOT mark the predecessor ADR as `Superseded`! Keep the predecessor's `- **Status**: Accepted` intact (you may optionally record `- **Proposed Replacement**: [ADR-XXXX: Title](file://.memory-bank/adr/XXXX-new-slug.md)` in the predecessor's header) so that if the proposal is rejected, the accepted predecessor remains active without repair.
+- **Only when the new ADR is explicitly approved and its status is `Status: Accepted`:**
 1. Open the predecessor file (e.g., `.memory-bank/adr/YYYY-<old-slug>.md`).
 2. Update its header metadata:
    - Change `- **Status**: Accepted` to `- **Status**: Superseded by [ADR-XXXX: Title](file://.memory-bank/adr/XXXX-new-slug.md)`.

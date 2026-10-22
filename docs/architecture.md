@@ -8,6 +8,7 @@ This document describes the structure and file layout initialized by the Sentine
 
 ```
 .
+├── AGENTS.md               # Codex entry point; reads .agents/AGENTS.md
 ├── .memory-bank/           # Core context, session states, and decision logs
 │   ├── active-session.json # Runtime state of the active session
 │   ├── system-coherence.md # Checklist and coherence procedures
@@ -39,6 +40,12 @@ This document describes the structure and file layout initialized by the Sentine
 ---
 
 ## 🔍 Core Memory Bank Files
+
+Codex discovers root and ancestor `AGENTS.md` files; `.agents/AGENTS.md` is the
+Sentinel rule source and needs a root entry point. An `AGENTS.override.md` can
+take precedence. Preserve existing instructions during bootstrap and verify
+loaded sources in a new session. The runtime manifest records intended boundaries;
+actual permissions are enforced by the host.
 
 ### 1. `.memory-bank/active-session.json`
 Keeps track of the session state. It contains:

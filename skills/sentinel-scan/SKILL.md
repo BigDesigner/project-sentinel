@@ -13,6 +13,9 @@ This skill acts as a reconnaissance tool to find scattered documentation, ad-hoc
 
 ## Execution Steps
 
+> [!NOTE]
+> **Pre-Execution Initialization Exemption (Rule 13):** `/sentinel-scan` is a read-only reconnaissance command and is explicitly exempt from the Memory Bank initialization guard. It runs in both initialized and uninitialized repositories; Step 3 gracefully skips cross-referencing if `.memory-bank/migration-map.md` does not yet exist.
+
 1. **Scan Repository**
    - Recursively search the workspace for `*.md` and `*.txt` files.
    - Ignore `node_modules/`, `venv/`, `.git/`, and other standard ignored directories.

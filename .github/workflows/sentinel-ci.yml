@@ -6,6 +6,19 @@ on:
   pull_request:
 
 jobs:
+  installer-tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exercise isolated installs, repeat runs, and conflict preservation
+        run: python -m unittest discover -s tests -v
+
   integrity:
     runs-on: ubuntu-latest
     steps:

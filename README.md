@@ -1,7 +1,7 @@
 # 🛡️ Sentinel Agent Memory Bank
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Claude_Code_|_Cursor_|_Windsurf_|_Antigravity-blueviolet?style=for-the-badge" alt="Platforms Supported">
+  <img src="https://img.shields.io/badge/Platform-Codex_|_Claude_Code_|_Cursor_|_Windsurf_|_Antigravity-blueviolet?style=for-the-badge" alt="Platforms Supported">
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License">
   <img src="https://img.shields.io/badge/Ecosystems-Universal_/_All-orange?style=for-the-badge" alt="Ecosystems Supported">
   <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge" alt="PRs Welcome">
@@ -11,7 +11,7 @@
 
 ## 🌟 Overview
 
-**Sentinel** is a universal system prompt, workspace customization directive, and context management framework designed for autonomous AI coding agents (such as **Claude Code**, **Cursor Composer**, **Windsurf Cascade**, and **Google Antigravity**).
+**Sentinel** is a workspace customization and context management framework for coding agents, including **Codex**, **Claude Code**, **Cursor Composer**, **Windsurf Cascade**, and **Google Antigravity**. Its files supply agent instructions; they do not replace the host's system instructions, sandbox, or approval policy.
 
 It establishes a structured, self-healing **Project Memory Bank** in any repository, ensuring that AI agents remain coherent, secure, and aligned with your historical engineering decisions—regardless of the programming language or project layout.
 
@@ -30,6 +30,7 @@ Sentinel organizes your repository's meta-context into four primary operational 
 
 ```
 📁 [Your Repository]
+├── AGENTS.md              # Codex entry point that reads .agents/AGENTS.md
 ├── 📁 .memory-bank/        # Core context, session states, and historical logs
 │   ├── active-session.json # Runtime state of the active session
 │   ├── system-coherence.md # Automated verification checklist
@@ -87,6 +88,9 @@ You don't need to understand what a "skill folder" or a "terminal" is. Just copy
 **For Claude Code (Windows):**
 > Install sentinel skills: run `git clone https://github.com/BigDesigner/project-sentinel.git "$env:USERPROFILE\project-sentinel"` and then `& "$env:USERPROFILE\project-sentinel\install.ps1"` then tell me what slash commands are now available.
 
+**For Codex:**
+> Clone `https://github.com/BigDesigner/project-sentinel.git` into a permanent folder. From that clone, run `bash ./install.sh --target codex` on macOS/Linux or `.\install.ps1 -Target Codex` in Windows PowerShell. Check for an existing Sentinel installation first, preserve conflicts, and verify that `$sentinel-help` is available in Codex.
+
 **For Google Antigravity (Windows):**
 > Install sentinel skills: run `git clone --depth 1 https://github.com/BigDesigner/project-sentinel.git "$env:USERPROFILE\.gemini\config\plugins\project-sentinel"` then tell me what slash commands are now available.
 
@@ -99,6 +103,15 @@ You don't need to understand what a "skill folder" or a "terminal" is. Just copy
 
 For power users who prefer to install the skills manually:
 
+- **For Codex (desktop, CLI, or IDE extension):** Clone this repository to a permanent folder, then run one of these commands from the clone:
+  - macOS/Linux: `bash ./install.sh --target codex`
+  - Windows PowerShell: `.\install.ps1 -Target Codex`
+  - These commands install Sentinel skills only; install and sign in to Codex separately using the [official Codex documentation](https://learn.chatgpt.com/docs/codex-cli).
+  - The Codex target links skills into `~/.agents/skills/`, the documented user-level discovery directory. For one repository, pass `--skills-dir /absolute/repo/.agents/skills` or `-SkillsDir 'C:\absolute\repo\.agents\skills'`.
+  - Invoke `$sentinel-help` or `$sentinel` in Codex. In CLI/IDE, `/skills` also opens skill selection. The `/sentinel-*` notation elsewhere in this guide is Claude Code notation.
+  - Codex detects skill changes automatically; restart it if a skill does not appear. Keep the clone because linked skills depend on it.
+  - If Sentinel is already installed at another location (including `~/.codex/skills` in some existing setups), inspect the loaded skill paths before installing again. Duplicate skill names are not merged.
+
 - **For Google Antigravity (Windows):** Clone directly to `%USERPROFILE%\.gemini\config\plugins\project-sentinel\`.
 - **For Claude Code:** Clone the repository anywhere, then run the installer script once:
   - macOS/Linux: `./install.sh`
@@ -107,6 +120,12 @@ For power users who prefer to install the skills manually:
 
 > [!TIP]
 > **Updating is just `git pull`.** The installer creates links (symlinks on macOS/Linux, directory junctions on Windows — no administrator rights required), not copies. Running `git pull` inside your cloned repository updates every installed skill immediately; you only need to re-run the installer when a brand-new skill is added, or if your system forced a copy-mode fallback (the installer tells you which mode it used).
+
+Both installers preserve existing destinations and report conflicts instead of deleting them. Review and relocate a conflicting installation before retrying. On Windows, copy fallback requires manually reconciling the copied skill after updates; the installer will preserve that existing copy.
+
+For Codex project rules, keep a root `AGENTS.md` that directs the agent to read `.agents/AGENTS.md`; the latter alone is not discovered as root guidance. Preserve existing rules and check for `AGENTS.override.md`, which takes precedence. Personal settings live in `~/.codex/config.toml` (or the configured `CODEX_HOME`), while project settings live in `.codex/config.toml` and require project trust. Skill installation does not change these settings. See the official [skill discovery guide](https://learn.chatgpt.com/docs/build-skills), [AGENTS.md discovery guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), and [configuration guide](https://learn.chatgpt.com/docs/config-file/config-basic).
+
+The four explicit-only skills (`sentinel-rescue`, `sentinel-prune`, `sentinel-handoff`, `sentinel-coauth`) include Codex invocation policy in `agents/openai.yaml`. Claude Code's `disable-model-invocation` frontmatter is a separate host-specific control. These controls do not authorize filesystem changes or bypass approvals.
 
 ---
 
@@ -163,7 +182,7 @@ cd <path-to-your-clone>/project-sentinel
 git pull origin main
 ```
 
-For Claude Code this is all you need: the installed skills are links back into this clone, so the pull updates them immediately. Re-run `install.sh` / `install.ps1` only when a new skill directory has been added upstream (a pull cannot create a link that does not exist yet), or if the installer reported that it fell back to copy mode.
+For Claude Code and Codex, linked installations read updates from this clone. Re-run the installer with the same target when a new skill directory is added; existing links to this clone are retained. For copied installations, review and reconcile the copied files after pulling. See the conflict behavior above.
 
 ---
 

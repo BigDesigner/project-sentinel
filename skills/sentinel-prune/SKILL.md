@@ -18,7 +18,7 @@ This skill acts as a Developer Environment Space Optimizer and Dependency Garbag
 ## Execution Steps
 
 ### 1. Identify Bloat Candidates
-- **Permission Boundaries Check:** Read `.agents/runtime-manifest.json` if it exists. Verify that any directories targeted for deletion are inside the `write_allowed_paths` manifest (if defined) and do NOT conflict with any `restricted_paths` settings. Strictly reject pruning any restricted paths.
+- **Permission Boundaries & Containment Check (CRITICAL):** Read `.agents/runtime-manifest.json` if it exists. Resolve the canonical real path of every candidate directory before adding it to the pruning list: reject any symlink, junction, or path that resolves outside the workspace root or intersects `restricted_paths`, and verify candidates fall within `write_allowed_paths` (if defined). Note that `runtime-manifest.json` is an advisory document and does not enforce OS-level sandbox boundaries on its own, so you MUST deterministically verify path containment, git tracking status (`git ls-files <dir>`), git ignore status (`git check-ignore` / `git status --ignored`), and build/manifest reproducibility before proposing any path for deletion.
 - Scan the project workspace for the following dependency and build structures across all 18 ecosystems:
   - **Node / TypeScript:** `node_modules/`, `.svelte-kit/`, `.next/`, `dist/`, `.turbo/`, `.nuxt/`, `.astro/`
   - **Python:** `.venv/`, `venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `*.egg-info/`
@@ -42,7 +42,7 @@ This skill acts as a Developer Environment Space Optimizer and Dependency Garbag
 
 ### 2. Formulate Pruning Plan
 - Generate a clear checklist of candidates to be deleted.
-- **Rule:** This skill must NEVER delete source code, configurations, or `.git` directories. It only targets transient build/dependency files.
+- **Rule (Git-Tracked & Reproducibility Guard):** This skill must NEVER delete source code, configurations, `.git` directories, or any directory containing Git-tracked files (`git ls-files <candidate>` must return empty). Colliding directory names like `bin/`, `vendor/`, `out/`, `build/`, or `target/` may be committed source or binary distribution folders in many repositories — only include a candidate if it is confirmed ignored/untracked AND reproducible from a verified lockfile or build manifest (`package.json`, `Cargo.toml`, `composer.json`, `go.mod`, `.csproj`, etc.). Present a concrete preview table showing each candidate path, resolved real path, tracked-file count (`0`), reproducibility source, and estimated size.
 
 ### 3. Dependency Architecture Optimization
 - Inspect active project manifests (`package.json`, `requirements.txt`, etc.).
