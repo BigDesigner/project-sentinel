@@ -224,6 +224,11 @@ An agent is strictly prohibited from compiling code (`build`, `compile`), execut
 2. **Immutable Deployment Pipeline:** Code reaches production ONLY through verified CI/CD release pipelines or pre-tested release packages (`.zip`, Docker image, tagged Git releases) after 100% of local tests and preflight checks pass.
 3. **Emergency Remote Exception:** In emergency triage where remote logs must be inspected, execution MUST be strictly read-only (`journalctl`, `tail -n 100`, `docker logs`). Mutating production files or compiling live code via SSH is a critical protocol breach.
 
+## 43. Local Scratch Tests, Cross-Check Reports & Temporary Artifact Isolation (`.tmp/` Mandate)
+All temporary test scripts, installer/skill verification harnesses, cross-check reports, and internal AI review documents generated while working on this repository (by Antigravity, Codex, Claude Code, or any other agent) MUST be stored exclusively inside the git-ignored `.tmp/` directory (e.g., `.tmp/tests/`, `.tmp/reports/`):
+1. **Zero Root / `docs/` / `tests/` Pollution:** Never create ad-hoc `tests/` directories at the repository root or drop internal review/cross-check markdown files into `docs/`.
+2. **Strict Git-Ignore Enforcement:** `.tmp/` MUST remain in `.gitignore` at all times. Under no circumstances may files inside `.tmp/` or temporary test/report artifacts be staged (`git add`), committed, or pushed to `origin/main`.
+
 
 
 
