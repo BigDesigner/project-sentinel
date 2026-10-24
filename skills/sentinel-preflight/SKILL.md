@@ -29,6 +29,15 @@ This skill acts as a "Release Engineer". Agents often write code perfectly but f
 - Extract all external dependencies, tokens, and secrets referenced in the code (e.g., `secrets.WINGET_TOKEN`, `process.env.DB_PASSWORD`).
 - Evaluate Native bindings (e.g., CGO requirements, Flutter FFI DLLs).
 
+### 2.5 Release Safety & Zero-Downtime Audit (Read-Only, Deep Reasoning)
+- **Database Migration Safety:** Inspect pending migrations for table-locking operations, non-nullable columns without defaults, column/table drops or renames still referenced by the currently deployed code, and long-running backfills. Require expand/contract ordering (deploy additive schema -> deploy code -> remove old schema in a later release) and online/concurrent index creation where supported. Verify migrations run before or after code deployment in the order the change requires.
+- **Rollback Readiness:** Confirm a documented rollback path for this release (previous artifact/image tag, reversible migrations or a forward-fix plan, and a verified backup point before destructive data changes).
+- **Health, Readiness & Graceful Shutdown:** For containerized or orchestrated deployments, verify readiness/liveness probes exist and target real dependency checks with realistic timeouts, and that the service handles termination signals (drains in-flight requests and background jobs) before exit.
+- **Build Reproducibility & Supply Chain:** Lockfiles are committed and CI installs with frozen/locked mode (`npm ci`, `pnpm install --frozen-lockfile`, `uv sync --locked`, `cargo build --locked`, `go mod download` with `go.sum`); base images and CI actions are pinned to versions or digests rather than floating `latest` tags; container images run as non-root where the platform allows.
+- **Environment Parity & Feature Flags:** New configuration keys exist in every target environment; risky changes are guarded by feature flags or staged rollout where the project supports them.
+- **Observability for the New Path:** Errors on the new code path are logged and visible (error tracking, metrics, or alerts) so a failed release is detected quickly.
+- Each item is classified as `Verified (evidence: file#L)`, `Missing`, or `Not Applicable (reason)`. This audit is read-only: never run migrations, deployments, or mutating commands against any shared or production environment while performing it (Rule 42).
+
 ### 3. The Pre-Flight Checklist & Persistence
 - If external secrets, native dependencies, or environment variables are found, HALT the execution process.
 - Generate a strict `[PRE-FLIGHT WARNING]` checklist.
@@ -75,6 +84,16 @@ These three checks apply universally regardless of deployment platform (Cloudfla
 ### 3. Artifact-to-Job Completeness
 - [ ] All deployable artifacts are enumerated: (e.g., backend API, frontend SPA, mobile build, DB migrations, worker scripts, scheduled jobs).
 - [ ] Every artifact has a corresponding pipeline job. No artifact is silently undeployed.
+
+## Release Safety & Zero-Downtime Contract
+| Check | Status | Evidence / Notes |
+|---|---|---|
+| Migration safety (expand/contract, no blocking locks) | [ ] Verified / [ ] Missing / [ ] N/A | ... |
+| Rollback path (previous artifact, reversible migration or forward-fix, backup) | [ ] Verified / [ ] Missing / [ ] N/A | ... |
+| Readiness/liveness probes & graceful shutdown | [ ] Verified / [ ] Missing / [ ] N/A | ... |
+| Frozen lockfile installs & pinned images/actions | [ ] Verified / [ ] Missing / [ ] N/A | ... |
+| Config parity across environments & feature flags | [ ] Verified / [ ] Missing / [ ] N/A | ... |
+| Observability on the new code path | [ ] Verified / [ ] Missing / [ ] N/A | ... |
 
 ## General Pipeline Health
 - [ ] GitHub Actions / CI config files parsed successfully.

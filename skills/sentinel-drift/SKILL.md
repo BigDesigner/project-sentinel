@@ -10,7 +10,7 @@ description: >-
 # `sentinel-drift` Skill
 
 ## Overview
-This skill acts as an Architectural Drift Detector. Over time, codebases deviate from their original design (e.g., developers add a new database library without updating the memory bank, or leave orphaned CI/CD files behind). This skill cross-references the actual state of the repository against `.memory-bank/system-coherence.md` and `.specs/boundary-conditions.md`.
+This skill acts as an Architectural Drift Detector. Over time, codebases deviate from their original design (e.g., developers add a new database library without updating the memory bank, or leave orphaned CI/CD files behind). This skill cross-references the actual state of the repository against `.memory-bank/system-coherence.md` and `.specs/boundary-conditions.md`. Beyond manifests and file inventories, it reasons over the source code itself to detect **structural drift**: layer inversions, dependency-direction violations, paradigm drift (e.g., hidden state in a declared stateless service), configuration drift, contract drift, and code that contradicts accepted ADRs.
 
 ## Execution Steps
 
@@ -24,6 +24,8 @@ This skill acts as an Architectural Drift Detector. Over time, codebases deviate
 ### 2. Reality Scanning (Cross-IDE Compatible)
 - Scan key project manifests across all 18 ecosystems (`.csproj`, `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `build.gradle`/`pom.xml`, `composer.json`, `pubspec.yaml`, `Gemfile`, `CMakeLists.txt`, `Package.swift`, `mix.exs`, `foundry.toml`, `build.zig`, `package.yaml`, `build.sbt`, `DESCRIPTION`/`Project.toml`, `*.rockspec`).
 - Scan infrastructure directories (`.github/workflows/`, `docker/`, etc.).
+- **Source Structure Scan:** Map the module/layer structure declared in `system-coherence.md` (e.g., UI -> API/Controller -> Service/Domain -> Repository/Persistence) onto actual directories and import/dependency statements, and collect every environment/config key read in code (`process.env.*`, `os.environ`, `os.Getenv`, `Environment.GetEnvironmentVariable`, `getenv`, config loaders) for comparison with `.env.example` and deployment manifests.
+- Read accepted ADRs in `.memory-bank/adr/` so their decisions can be compared with the implementation.
 - Use deterministic, platform-agnostic tools to read these files (e.g., built-in agent read tools, not specific bash/powershell commands).
 
 ### 3. Drift Analysis
@@ -32,6 +34,12 @@ This skill acts as an Architectural Drift Detector. Over time, codebases deviate
 - **Detect Orphaned Files:** Are there redundant CI/CD workflows or deprecated entry points that should have been deleted?
 - **Detect Missing Documentation:** Are there major architectural components in the code that lack an accompanying ADR in `.memory-bank/adr/`?
 - **Detect Unwired APIs & Dead UI Actions (Paradigm-Aware):** First determine the target's actual consumer paradigm. Apply the 5-link UI wiring check ONLY to interactive user-facing features. For headless APIs, webhooks, background workers, scheduled jobs, CLI commands, SDKs, or server-rendered endpoints, mark UI links as `N/A (Headless / External / CLI Consumer)` and verify their actual consumer contract instead. Before flagging a route or service method as unwired, check for dynamic routing, framework conventions, or external consumer documentation; report static absence of a direct call as a **Candidate Unwired Surface** rather than a definitive defect until dynamic/external invocation is ruled out.
+- **Detect Layer Inversion & Dependency-Direction Violations:** UI components or controllers querying the database/ORM directly and bypassing the service layer; domain code importing framework, transport, or UI modules; lower layers importing higher layers; and circular dependencies between modules that the declared architecture keeps separate.
+- **Detect Paradigm Drift:** Code that contradicts the declared runtime model — e.g., module-level mutable state, in-memory caches, or local file writes in a service declared stateless/serverless; synchronous blocking I/O in a declared async/event-loop runtime; direct cross-service database access in a declared service-per-database design; or a second state-management/data-access pattern introduced alongside the mandated one.
+- **Detect Configuration Drift:** Environment/config keys read in code but missing from `.env.example`, deployment manifests, or CI secrets; keys declared in manifests but never read (dead config); and hardcoded values that the architecture requires to come from configuration.
+- **Detect Contract Drift:** Implemented routes, payload shapes, or event schemas that diverge from documented contracts (OpenAPI/GraphQL schemas, shared types, `.specs/` contracts), and backend validation schemas that diverge from frontend client payloads (Rule 27).
+- **Detect ADR Decision Drift:** Implementation that contradicts an ADR with `Status: Accepted` (e.g., an ADR mandates a queue-based integration but the code calls the provider synchronously), distinct from merely missing ADRs.
+- **Evidence & Confidence:** Every structural drift finding MUST cite concrete evidence (`file#Lstart-Lend` and the violated declaration in `system-coherence.md`, `.specs/`, or the ADR) and a confidence level: `Confirmed Drift` (direct evidence) or `Candidate Drift` (pattern suggests drift but intent, convention, or dynamic wiring could not be ruled out).
 
 ### 4. Reporting
 - Compile a strict `Architectural Drift Report`.
@@ -49,6 +57,11 @@ This skill acts as an Architectural Drift Detector. Over time, codebases deviate
 - **Orphaned/Deprecated Files:** [None / List]
 - **Missing Documentation / ADRs:** [None / List]
 - **Unconnected / Unwired Features:** [None / List]
+- **Layer / Dependency-Direction Violations:** [None / List]
+- **Paradigm Drift:** [None / List]
+- **Configuration Drift:** [None / List]
+- **Contract Drift:** [None / List]
+- **ADR Decision Drift:** [None / List]
 
 ## Detailed Analysis
 
@@ -67,6 +80,21 @@ This skill acts as an Architectural Drift Detector. Over time, codebases deviate
 |---|---|---|---|
 | `e.g. POST /api/quotes/:id/send-email` | Backend API | Route exists, 0 Frontend service calls | Wire to Frontend ApiService |
 | `e.g. PdfService.generatePdf()` | Frontend Service | Class exists, 0 UI trigger buttons | Add UI Download Button |
+
+### Structural & Paradigm Drift
+| Drift Type | Evidence (`file#L`) | Violated Declaration | Confidence | Action Required |
+|---|---|---|---|---|
+| `e.g. Layer Inversion` | `src/ui/InvoiceList.tsx#L40-L52` | system-coherence: UI must call Service layer | Confirmed Drift | Route query through InvoiceService |
+
+### Configuration & Contract Drift
+| Key / Contract | Evidence (`file#L`) | Expected Location / Schema | Confidence | Action Required |
+|---|---|---|---|---|
+| `e.g. STRIPE_WEBHOOK_SECRET` | `src/webhooks/stripe.ts#L12` | Missing from `.env.example` and deployment manifest | Confirmed Drift | Declare in `.env.example` and secrets |
+
+### ADR Decision Drift
+| ADR | Accepted Decision | Contradicting Evidence (`file#L`) | Confidence | Action Required |
+|---|---|---|---|---|
+| ... | ... | ... | ... | ... |
 
 ### Missing ADR Records
 | Component/Feature | Discovered Path | Missing ADR Reference | Action Required |
