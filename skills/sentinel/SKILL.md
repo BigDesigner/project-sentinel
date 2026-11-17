@@ -1046,6 +1046,7 @@ It must include:
   - **Error Handling:** When an error is made, do not apologize. Acknowledge the error and directly output the corrected code, command, or file replacement.
   - **Anti-Eager Execution (CRITICAL):** When you are in Planning Mode and generate a plan (e.g., `implementation_plan.md`) with `request_feedback = true` (or equivalent pausing mechanism), you MUST immediately STOP calling tools. Do NOT invoke any file modification or terminal commands in the same response. Wait for explicit user approval before executing the plan.
 - **Stack-Specific Agent Behaviors**: (e.g., "Always use `php -l` before proposing a commit" or "Never run `cargo run` without building first").
+- **Core Engineering & Governance Invariants**: Include the universal project invariants from `templates/custom-rules-template.md` (Permanent Skepticism & Unverified Runtime Risk disclosure; Paradigm-Aware 5-Link E2E Wiring; Premature Code Mutation / Intent Verification Guard; Test Assertion Invariant — never weaken tests to hide bugs; Cryptographic Governance Baseline & ADR-to-Spec synchronization; Public Artifact Isolation — zero internal AI directive leakage into `README.md`/`docs/`; and Live Remote Production Mutation Prohibition — never compile or mutate code in situ on live servers via SSH).
 
 ### 3.13 `.agents/runtime-manifest.json`
 

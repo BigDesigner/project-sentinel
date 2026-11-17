@@ -36,6 +36,8 @@ Sentinel organizes your repository's meta-context into four primary operational 
 │   ├── system-coherence.md # Automated verification checklist
 │   ├── migration-map.md    # Tracks old files archived or reorganized
 │   ├── adr/                # Architecture Decision Records (ADRs)
+│   ├── audits/             # Collision-safe security, drift, doctor, and test reports
+│   ├── bugs/               # Defect history and 3-strike escalation tracking
 │   ├── changelog/          # Change logs and verified worklogs
 │   └── state-of-the-union.md # Distilled context onboarding summary
 ├── 📁 .specs/              # Project technical specifications
@@ -139,15 +141,16 @@ Once installed, you can trigger specific workflows using the following commands:
 | **`/sentinel-adr`** | Creates, updates, or supersedes Architecture Decision Records with bi-directional lineage linking. |
 | **`/sentinel-grill`** | Interrogates the user in an empty directory to architect the tech stack, then bootstraps a custom-tailored Memory Bank. |
 | **`/sentinel-scan`** | Scans the repository for all `*.md` and `*.txt` files and outputs a categorized documentation inventory. |
-| **`/sentinel-audit`** | Scans source files for common vulnerabilities (SQLi, XSS, RCE, IDOR, etc.) and security contract violations. Report-only. |
+| **`/sentinel-docgen`** | Scaffolds an evidence-backed, 6-file modular technical documentation suite under `.documentation/` without modifying app code. |
+| **`/sentinel-audit`** | Dual-Pass enterprise security audit (open-ended taint/dataflow & business-logic reasoning + 27-point baseline) with reachability proof and Standalone Fallback Mode. Report-only. |
 | **`/sentinel-handoff`**| Wraps up a work session. Syncs `active-session.json` and updates `handoff.md` with only codebase changes. Commit/push is proposed, never automatic. |
-| **`/sentinel-planaudit`** | Acts as a Senior Architect. Auto-reviews and hardens implementation plans against project specs before execution. |
+| **`/sentinel-planaudit`** | Acts as a Senior Architect. Audits plans against specs and Pre-Mortem failure simulations (migrations, rollback, compatibility, scale) before execution. |
 | **`/sentinel-clarify`** | Interrogates the user to resolve underspecified requirements and potential boundary violations before planning or coding begins. |
-| **`/sentinel-drift`** | Detects discrepancies between the established architecture and the actual implementation (e.g. rogue packages, orphaned files). |
+| **`/sentinel-drift`** | Detects rogue packages, orphaned files, unwired UI/API seams, layer inversions, paradigm drift, config drift, and ADR contradictions. |
 | **`/sentinel-converge`** | Compares the implemented codebase against the implementation plan to autonomously append missing or unfinished tasks. |
-| **`/sentinel-qa`** | Autonomously writes Red Team unit and integration tests designed to aggressively break the boundary conditions and security rules. |
-| **`/sentinel-testpilot`** | Autonomous functional QA agent (TestSprite-style): detects the project's own test framework, generates a test plan, writes runnable tests, executes them, classifies real bugs vs test defects, self-heals, and writes a report. |
-| **`/sentinel-preflight`** | Audits the deployment environment, external dependencies, CI/CD pipelines, and secrets before allowing a commit or release. |
+| **`/sentinel-qa`** | Dual-Pass Red Team test writer (burst concurrency, IDOR, JWT/state-machine abuse, capability parity, plus classic boundary tests) with positive controls and zero-error runtime gates. |
+| **`/sentinel-testpilot`** | Autonomous functional QA agent: detects test framework across 18 ecosystems, runs property-based and asset-suppression tests, supports `git archive` A/B baseline comparisons and zero-notice gates, and writes `.memory-bank/audits/testreport-<hash>.md`. |
+| **`/sentinel-preflight`** | Audits secrets, CI/CD configs, zero-downtime migration safety, rollback readiness, health probes, and lockfile pinning before release. |
 | **`/sentinel-rescue`** | Hard-resets the project and memory bank back to the last known coherent state in case of severe hallucinations or corruption. |
 | **`/sentinel-brief`** | Generates a single-page onboarding summary (State of the Union) for humans or agents migrating between environments. |
 | **`/sentinel-prune`** | Safely cleans up bloated dependency/build folders (node_modules, .venv, target) and optimizes package managers (pnpm, uv). |
