@@ -21,7 +21,7 @@ This skill acts as a "Release Engineer". Agents often write code perfectly but f
 - Analyze the deployment target (e.g., Windows EXE, Linux Docker, Cloudflare Worker).
 
 ### 2. Dependency & Secret Audit
-- Scan CI/CD configuration files (e.g., `.github/workflows/*.yml`).
+- Scan CI/CD configuration files (e.g., `.github/workflows/*.yml`) — including auditing all `uses: <owner>/<action>@<ref>` and `runs-on:` declarations for outdated action major versions that target deprecated Node.js runtimes (e.g., `pnpm/action-setup@v4`, `actions/checkout@v3`/`@v4`, `actions/setup-node@v3`/`@v4` triggering GitHub Actions Node.js 20 deprecation warnings) or retiring runner images, and require upgrading them to current Node 24-compatible major versions (e.g., `pnpm/action-setup@v5`+, `actions/checkout@v5`+) before release.
 - Scan environment configuration files (e.g., `.env.example`, `config.yaml`).
 - Scan deployment manifests (`wrangler.toml`, `docker-compose.yml`, `helm`, `.env.production`) for un-promoted development flags (e.g. `ENVIRONMENT = "development"`), `localhost` CORS origins, debug endpoints, or mock API keys (Rule 30).
 - Scan deployment scripts, workflows, and release hooks to ensure NO direct in-situ code compilation or mutating commands are executed live on production servers via SSH or remote shells (Rule 42).
@@ -109,7 +109,7 @@ After a `git push` command is executed on a repository with an active CI/CD pipe
    - **Claude Code / Terminal CLI:** Run `gh run watch <run_id>` or background execution `until [ "$(gh run view <run_id> --json status -q .status 2>&1)" = "completed" ]; do sleep 10; done; gh run view <run_id>`.
    - **Cursor / Windsurf:** Run `gh run view <run_id>` in background terminal tasks.
 3. **Automated Error Extraction & Auto-Fix:**
-   - **On Success (`conclusion == success`):** Report the successful deployment, live URLs, and status to the user in their preferred language.
+   - **On Success (`conclusion == success`):** Inspect the run output/annotations (`gh run view <run_id>`) before reporting: if GitHub Actions emitted deprecation warnings or runtime annotations (such as `Node.js 20 is deprecated... forced to run on Node.js 24` on `pnpm/action-setup@v4` or runner image retirement warnings), proactively surface them and offer/apply the workflow action version upgrade; then report the successful deployment, live URLs, and status to the user in their preferred language.
    - **On Failure (`conclusion == failure`):** Automatically run `gh run view <run_id> --log-failed` to extract the exact failure logs, identify the root cause, apply the required fix, commit, and push again.
 
 ## Prompt Injection Shield (CRITICAL)
