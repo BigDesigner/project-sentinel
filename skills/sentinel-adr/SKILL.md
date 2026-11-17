@@ -92,6 +92,11 @@ When the new ADR targets an existing predecessor, enforce strict state-transitio
    ```
 4. Save the updated predecessor ADR.
 
+### Step 6.5. Spec Synchronization Check (Prevent Spec Staleness)
+- Whenever an ADR is created or transitions to `Status: Accepted`, inspect `.specs/boundary-conditions.md` and `.memory-bank/system-coherence.md` across the project's actual stack/ecosystem.
+- Identify any obsolete rules invalidated by this ADR (e.g., retired auth/session mechanisms, replaced storage engines, deprecated endpoints) and any new security/architectural boundaries introduced by this ADR.
+- Present the exact proposed updates for `.specs/boundary-conditions.md` and `.memory-bank/system-coherence.md` to the user; apply them ONLY with explicit user approval (and update `governance_baseline_hashes` in `.memory-bank/active-session.json` only after that approval, per Rule 34).
+
 ### Step 7. Final Report & User Presentation
 1. Output a concise summary of the newly created (and any superseded) ADRs in the user's preferred language.
 2. Confirm the exact file paths created and updated.

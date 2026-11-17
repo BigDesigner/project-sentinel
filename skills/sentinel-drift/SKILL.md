@@ -26,7 +26,7 @@ This skill acts as an Architectural Drift Detector. Over time, codebases deviate
 - Scan infrastructure directories (`.github/workflows/`, `docker/`, etc.).
 - **Source Structure Scan:** Map the module/layer structure declared in `system-coherence.md` (e.g., UI -> API/Controller -> Service/Domain -> Repository/Persistence) onto actual directories and import/dependency statements, and collect every environment/config key read in code (`process.env.*`, `os.environ`, `os.Getenv`, `Environment.GetEnvironmentVariable`, `getenv`, config loaders) for comparison with `.env.example` and deployment manifests.
 - Read accepted ADRs in `.memory-bank/adr/` so their decisions can be compared with the implementation.
-- Use deterministic, platform-agnostic tools to read these files (e.g., built-in agent read tools, not specific bash/powershell commands).
+- Use deterministic, platform-agnostic tools to read these files (e.g., built-in agent read tools, not specific bash/powershell commands). On large multi-module repositories (e.g., 50+ source files), when the host IDE supports parallel read-only subagents/workers, you may partition source-structure scanning by architectural layer/module and reconcile findings centrally; otherwise scan sequentially without skipping files.
 
 ### 3. Drift Analysis
 - Compare the "Expected Architecture" vs "Reality".
